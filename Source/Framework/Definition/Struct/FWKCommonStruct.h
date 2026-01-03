@@ -2,9 +2,9 @@
 
 namespace FWK::CommonStruct
 {
-	struct Size final
+	struct Dimension2D
 	{
-		int height = 0;
 		int width  = 0;
+		int height = 0;
 	};
 }

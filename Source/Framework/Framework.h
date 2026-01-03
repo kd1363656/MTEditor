@@ -4,5 +4,13 @@
 #include "Definition/Constant/FWKCommonConstant.h"
 #include "Definition/Struct/FWKCommonStruct.h"
 
+#include "Utility/FileIO/FWKFileIOUtility.h"
+
 // 安全なシングルトンを作成するための基底クラス
 #include "Singleton/FWKSingletonBase.h"
+
+// "Window"クラス
+#include "Window/FWKWindow.h"
+
+// "FPS"管理クラス
+#include "FPS/FWKFPSController.h"
