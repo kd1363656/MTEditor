@@ -1,2 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{7acb3270-6886-44e1-8c83-a0855ccd9325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Framework">
+      <UniqueIdentifier>{1d526373-7faf-45aa-b045-ae299cfa082e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Framework\Singleton">
+      <UniqueIdentifier>{2dee0103-20b1-433e-863e-ef3ccc832c41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Application">
+      <UniqueIdentifier>{ede798b5-8a0c-4af8-b43a-eef1b4872e20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library">
+      <UniqueIdentifier>{21fd05f2-14ba-4a52-90ef-190d684c8da1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Framework\Definition">
+      <UniqueIdentifier>{11bb82bf-6242-4fbf-af49-74d09c8e87e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Framework\Definition\Struct">
+      <UniqueIdentifier>{b90697e1-ff82-48a1-b5e4-d861b47a11c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Framework\Definition\Constant">
+      <UniqueIdentifier>{a06c82d6-d31f-4c71-93f0-5e14fb7048e0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\PCH.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Singleton\FWKSingletonBase.h">
+      <Filter>Source\Framework\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Framework.h">
+      <Filter>Source\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Definition\Constant\FWKCommonConstant.h">
+      <Filter>Source\Framework\Definition\Constant</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Definition\Struct\FWKCommonStruct.h">
+      <Filter>Source\Framework\Definition\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\Application.h">
+      <Filter>Source\Application</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\PCH.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application\Application.cpp">
+      <Filter>Source\Application</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
