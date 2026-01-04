@@ -8,6 +8,11 @@ bool FWK::Graphics::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStr
 		return false;
 	}
 
+	// デバック処理は比較的重たいので"Debug"の時のみ有効
+#ifdef _DEBUG
+	EnableDebugLayer();
+#endif
+
 	if (!CreateDevice())
 	{
 		assert(false && "\"D3D12\"デバイス作成失敗");
@@ -335,4 +340,13 @@ void FWK::Graphics::GraphicsDevice::SetResourceBarrier(ID3D12Resource* a_resourc
 	l_barrier.Transition.StateBefore = a_before;
 
 	m_cmdList->ResourceBarrier(1 , &l_barrier);
+}
+
+void FWK::Graphics::GraphicsDevice::EnableDebugLayer()
+{
+	ID3D12Debug* l_debugLayer = nullptr;
+
+	D3D12GetDebugInterface        (IID_PPV_ARGS(&l_debugLayer));
+	l_debugLayer->EnableDebugLayer();							 // デバックレイヤーの有効化
+	l_debugLayer->Release         ();
 }

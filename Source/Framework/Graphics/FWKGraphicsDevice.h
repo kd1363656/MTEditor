@@ -47,6 +47,9 @@ namespace FWK::Graphics
 		// リソースとして引数に渡したバッファの扱いを変更する関数
 		void SetResourceBarrier(ID3D12Resource* a_resource , D3D12_RESOURCE_STATES a_before , D3D12_RESOURCE_STATES a_after) const;
 
+		// デバックレイヤーを適用
+		void EnableDebugLayer();
+
 		std::array<Microsoft::WRL::ComPtr<ID3D12Resource> , 2LLU> m_swapChainBuffers;
 
 		Microsoft::WRL::ComPtr<ID3D12Device8>   m_device      = nullptr;
