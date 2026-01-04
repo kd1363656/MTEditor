@@ -37,6 +37,12 @@
     <Filter Include="Source\Framework\Utility\FileIO">
       <UniqueIdentifier>{2c3499b1-aa78-4ddd-a171-0e7092466bbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Framework\Graphics">
+      <UniqueIdentifier>{7ca3a065-7903-414d-8540-0e44e64fc5f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Framework\Graphics\Device">
+      <UniqueIdentifier>{ed8c2ea7-a9fc-428d-b904-996b4b244fc5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\PCH.h">
@@ -72,6 +78,9 @@
     <ClInclude Include="..\Library\strconv2.h">
       <Filter>Library</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Framework\Graphics\Device\FWKGraphicsDevice.h">
+      <Filter>Source\Framework\Graphics\Device</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\PCH.cpp">
@@ -85,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="Source\Framework\FPS\FWKFPSController.cpp">
       <Filter>Source\Framework\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\Graphics\Device\FWKGraphicsDevice.cpp">
+      <Filter>Source\Framework\Graphics\Device</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

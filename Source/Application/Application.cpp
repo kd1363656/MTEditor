@@ -95,6 +95,13 @@ bool Application::Init(const FWK::CommonStruct::Dimension2D& a_size)
 		return false;
 	}
 
+	// グラフィックスデバイスの初期化
+	if (!FWK::GraphicsDevice::GetInstance().Init())
+	{
+		assert(false && "グラフィックスデバイス初期化失敗。");
+		return false ;
+	}
+
 	// フルスクリーン
 	bool l_isFullScreen = false;
 	/*if (MessageBoxA(l_hWND                       , 

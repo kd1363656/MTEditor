@@ -14,3 +14,6 @@
 
 // "FPS"管理クラス
 #include "FPS/FWKFPSController.h"
+
+// 描画関係のデバイス
+#include "Graphics/Device/FWKGraphicsDevice.h"
