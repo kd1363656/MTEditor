@@ -1,6 +1,6 @@
 #include "FWKGraphicsDevice.h"
 
-bool FWK::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStruct::Dimension2D& a_size)
+bool FWK::Graphics::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStruct::Dimension2D& a_size)
 {
 	if (!CreateFactory())
 	{
@@ -26,10 +26,29 @@ bool FWK::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStruct::Dimen
 		return false;
 	}
 
+	if (!m_rtvHeap)
+	{
+		m_rtvHeap = std::make_unique<FWK::Graphics::RTVHeap>();
+	}
+
+	// レンダーターゲットン確保個数は"100"個だが超えてしまうとアサートでエラーが出る
+	if (!m_rtvHeap->Create(m_device.Get() , 100))
+	{
+		assert(false && "RTVヒープの作成失敗");
+		return false;
+	}
+
+	if (!CreateSwapChainRTV())
+	{
+		assert(false && "スワップチェイン\"RTV\"の作成失敗");
+		return false;
+	}
+
+
 	return true;
 }
 
-bool FWK::GraphicsDevice::CreateFactory()
+bool FWK::Graphics::GraphicsDevice::CreateFactory()
 {
 	UINT l_flagsDXGI = 0U;
 
@@ -45,7 +64,7 @@ bool FWK::GraphicsDevice::CreateFactory()
 	return true;
 }
 
-bool FWK::GraphicsDevice::CreateDevice()
+bool FWK::Graphics::GraphicsDevice::CreateDevice()
 {
 	Microsoft::WRL::ComPtr<IDXGIAdapter>              l_selectAdapter = nullptr;
 	std::vector<Microsoft::WRL::ComPtr<IDXGIAdapter>> l_adapters;
@@ -129,7 +148,7 @@ bool FWK::GraphicsDevice::CreateDevice()
 	return true;
 }
 
-bool FWK::GraphicsDevice::CreateCommandList()
+bool FWK::Graphics::GraphicsDevice::CreateCommandList()
 {
 	if (!m_device)
 	{
@@ -171,7 +190,7 @@ bool FWK::GraphicsDevice::CreateCommandList()
 	return true;
 }
 
-bool FWK::GraphicsDevice::CreateSwapChain(const HWND a_hWND, const FWK::CommonStruct::Dimension2D& a_size)
+bool FWK::Graphics::GraphicsDevice::CreateSwapChain(const HWND a_hWND, const FWK::CommonStruct::Dimension2D& a_size)
 {
 	if (!m_dxgiFactory) { return false; }
 
@@ -195,6 +214,23 @@ bool FWK::GraphicsDevice::CreateSwapChain(const HWND a_hWND, const FWK::CommonSt
 	if (FAILED(l_result))
 	{
 		return false;
+	}
+
+	return true;
+}
+
+bool FWK::Graphics::GraphicsDevice::CreateSwapChainRTV()
+{
+	for (int l_i = 0; l_i < (int)m_swapChainBuffers.size(); ++l_i)
+	{
+		auto l_hr = m_swapChain->GetBuffer(l_i , IID_PPV_ARGS(&m_swapChainBuffers[l_i]));
+
+		if (FAILED(l_hr))
+		{
+			return false;
+		}
+
+		m_rtvHeap->CreateRTV(m_swapChainBuffers[l_i].Get());
 	}
 
 	return true;

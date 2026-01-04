@@ -16,4 +16,5 @@
 #include "FPS/FWKFPSController.h"
 
 // 描画関係のデバイス
-#include "Graphics/Device/FWKGraphicsDevice.h"
+#include "Graphics/RTVHeap/FWKGraphicsRTVHeap.h"
+#include "Graphics/FWKGraphicsDevice.h"
