@@ -44,8 +44,47 @@ bool FWK::Graphics::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStr
 		return false;
 	}
 
+	if (!CreateFence())
+	{
+		assert(false && "フェンスの作成失敗");
+		return false;
+	}
 
 	return true;
+}
+
+void FWK::Graphics::GraphicsDevice::ScreenFlip()
+{
+	if (!m_swapChain) { return; }
+
+	// リソースバリアのステートをレンダーターゲットに変更
+	auto l_bbIDX = m_swapChain->GetCurrentBackBufferIndex();
+	SetResourceBarrier(m_swapChainBuffers[l_bbIDX].Get() , D3D12_RESOURCE_STATE_PRESENT , D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	// レンダーターゲットをセット
+}
+
+void FWK::Graphics::GraphicsDevice::WaitForCommandQueue()
+{
+	if (!m_cmdQueue) { return; }
+	if (!m_fence)    { return; }
+
+	m_cmdQueue->Signal(m_fence.Get() , ++m_fenceVal);
+
+	if (m_fence->GetCompletedValue() != m_fenceVal)
+	{
+		// イベントハンドルの取得
+		auto l_event = CreateEvent(nullptr , false , false , nullptr);
+
+		if (!l_event)
+		{
+			assert(false && "イベントエラー、アプリケーションを終了します。");
+		}
+
+		m_fence->SetEventOnCompletion(m_fenceVal , l_event);
+		WaitForSingleObject          (l_event    , INFINITE);	// イベントが発生するまで待ち続ける
+		CloseHandle					 (l_event);					// イベントハンドルを閉じる
+	}
 }
 
 bool FWK::Graphics::GraphicsDevice::CreateFactory()
@@ -192,7 +231,10 @@ bool FWK::Graphics::GraphicsDevice::CreateCommandList()
 
 bool FWK::Graphics::GraphicsDevice::CreateSwapChain(const HWND a_hWND, const FWK::CommonStruct::Dimension2D& a_size)
 {
-	if (!m_dxgiFactory) { return false; }
+	if (!m_dxgiFactory) 
+	{
+		return false; 
+	}
 
 	DXGI_SWAP_CHAIN_DESC1 l_swapChainDesc = {};
 	l_swapChainDesc.Width                 = a_size.width;
@@ -221,6 +263,11 @@ bool FWK::Graphics::GraphicsDevice::CreateSwapChain(const HWND a_hWND, const FWK
 
 bool FWK::Graphics::GraphicsDevice::CreateSwapChainRTV()
 {
+	if (!m_rtvHeap) 
+	{
+		return false; 
+	}
+
 	for (int l_i = 0; l_i < (int)m_swapChainBuffers.size(); ++l_i)
 	{
 		auto l_hr = m_swapChain->GetBuffer(l_i , IID_PPV_ARGS(&m_swapChainBuffers[l_i]));
@@ -234,4 +281,33 @@ bool FWK::Graphics::GraphicsDevice::CreateSwapChainRTV()
 	}
 
 	return true;
+}
+
+bool FWK::Graphics::GraphicsDevice::CreateFence()
+{
+	if (!m_device) 
+	{
+		return false; 
+	}
+
+	auto l_result = m_device->CreateFence(m_fenceVal , D3D12_FENCE_FLAG_NONE , IID_PPV_ARGS(&m_fence));
+
+	if (FAILED(l_result))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void FWK::Graphics::GraphicsDevice::SetResourceBarrier(ID3D12Resource* a_resource, D3D12_RESOURCE_STATES a_before, D3D12_RESOURCE_STATES a_after)
+{
+	if (!m_cmdList) { return; }
+
+	D3D12_RESOURCE_BARRIER l_barrier = {};
+	l_barrier.Transition.pResource   = a_resource;
+	l_barrier.Transition.StateAfter  = a_after;
+	l_barrier.Transition.StateBefore = a_before;
+
+	m_cmdList->ResourceBarrier(1 , &l_barrier);
 }
