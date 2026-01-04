@@ -48,7 +48,7 @@ namespace FWK::Graphics
 		void SetResourceBarrier(ID3D12Resource* a_resource , D3D12_RESOURCE_STATES a_before , D3D12_RESOURCE_STATES a_after) const;
 
 		// デバックレイヤーを適用
-		void EnableDebugLayer();
+		void EnableDebugLayer() const;
 
 		std::array<Microsoft::WRL::ComPtr<ID3D12Resource> , 2LLU> m_swapChainBuffers;
 
@@ -59,7 +59,7 @@ namespace FWK::Graphics
 		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList6> m_cmdList      = nullptr;
 		Microsoft::WRL::ComPtr<ID3D12CommandQueue>         m_cmdQueue     = nullptr;
 		
-		Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain   = nullptr;
+		Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain = nullptr;
 
 		// コマンドキューの実行同期をとるためのもの
 		Microsoft::WRL::ComPtr<ID3D12Fence> m_fence = nullptr;

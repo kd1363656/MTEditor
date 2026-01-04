@@ -60,11 +60,6 @@ bool FWK::Graphics::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStr
 
 void FWK::Graphics::GraphicsDevice::ScreenFlip()
 {
-	if (!m_swapChain) { return; }
-	if (!m_cmdQueue)  { return; }
-	if (!m_rtvHeap)   { return; }
-	if (!m_cmdList)   { return; }
-
 	// リソースバリアのステートをレンダーターゲットに変更
 	auto l_bbIDX = m_swapChain->GetCurrentBackBufferIndex();
 	SetResourceBarrier(m_swapChainBuffers[l_bbIDX].Get() , D3D12_RESOURCE_STATE_PRESENT , D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -101,9 +96,6 @@ void FWK::Graphics::GraphicsDevice::ScreenFlip()
 
 void FWK::Graphics::GraphicsDevice::WaitForCommandQueue()
 {
-	if (!m_cmdQueue) { return; }
-	if (!m_fence)    { return; }
-
 	m_cmdQueue->Signal(m_fence.Get() , ++m_fenceVal);
 
 	if (m_fence->GetCompletedValue() != m_fenceVal)
@@ -210,7 +202,7 @@ bool FWK::Graphics::GraphicsDevice::CreateDevice()
 
 	// "Direct3D"デバイスの初期化
 	D3D_FEATURE_LEVEL l_featureLevel;
-	for (auto& l_lv : l_levels)
+	for (const auto& l_lv : l_levels)
 	{
 		if (D3D12CreateDevice(l_selectAdapter.Get() , l_lv , IID_PPV_ARGS(&m_device)) == S_OK)
 		{
@@ -293,11 +285,6 @@ bool FWK::Graphics::GraphicsDevice::CreateSwapChain(const HWND a_hWND, const FWK
 
 bool FWK::Graphics::GraphicsDevice::CreateSwapChainRTV()
 {
-	if (!m_rtvHeap) 
-	{
-		return false; 
-	}
-
 	for (int l_i = 0; l_i < (int)m_swapChainBuffers.size(); ++l_i)
 	{
 		auto l_hr = m_swapChain->GetBuffer(l_i , IID_PPV_ARGS(&m_swapChainBuffers[l_i]));
@@ -315,11 +302,6 @@ bool FWK::Graphics::GraphicsDevice::CreateSwapChainRTV()
 
 bool FWK::Graphics::GraphicsDevice::CreateFence()
 {
-	if (!m_device) 
-	{
-		return false; 
-	}
-
 	auto l_result = m_device->CreateFence(m_fenceVal , D3D12_FENCE_FLAG_NONE , IID_PPV_ARGS(&m_fence));
 
 	if (FAILED(l_result))
@@ -332,8 +314,6 @@ bool FWK::Graphics::GraphicsDevice::CreateFence()
 
 void FWK::Graphics::GraphicsDevice::SetResourceBarrier(ID3D12Resource* a_resource , D3D12_RESOURCE_STATES a_before , D3D12_RESOURCE_STATES a_after) const
 {
-	if (!m_cmdList) { return; }
-
 	D3D12_RESOURCE_BARRIER l_barrier = {};
 	l_barrier.Transition.pResource   = a_resource;
 	l_barrier.Transition.StateAfter  = a_after;
@@ -342,7 +322,7 @@ void FWK::Graphics::GraphicsDevice::SetResourceBarrier(ID3D12Resource* a_resourc
 	m_cmdList->ResourceBarrier(1 , &l_barrier);
 }
 
-void FWK::Graphics::GraphicsDevice::EnableDebugLayer()
+void FWK::Graphics::GraphicsDevice::EnableDebugLayer() const
 {
 	ID3D12Debug* l_debugLayer = nullptr;
 
