@@ -96,7 +96,7 @@ bool Application::Init(const FWK::CommonStruct::Dimension2D& a_size)
 	}
 
 	// グラフィックスデバイスの初期化
-	if (!FWK::GraphicsDevice::GetInstance().Init())
+	if (!FWK::GraphicsDevice::GetInstance().Init(GetHWND() , a_size))
 	{
 		assert(false && "グラフィックスデバイス初期化失敗。");
 		return false ;

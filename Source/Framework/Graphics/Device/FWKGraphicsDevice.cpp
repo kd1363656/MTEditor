@@ -1,6 +1,6 @@
 #include "FWKGraphicsDevice.h"
 
-bool FWK::GraphicsDevice::Init()
+bool FWK::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStruct::Dimension2D& a_size)
 {
 	if (!CreateFactory())
 	{
@@ -8,9 +8,21 @@ bool FWK::GraphicsDevice::Init()
 		return false;
 	}
 
-	if (!CreateFactory())
+	if (!CreateDevice())
 	{
 		assert(false && "\"D3D12\"デバイス作成失敗");
+		return false;
+	}
+
+	if (!CreateCommandList())
+	{
+		assert(false && "コマンドリストの作成失敗");
+		return false;
+	}
+
+	if (!CreateSwapChain(a_hWND , a_size))
+	{
+		assert(false && "スワップチェインの作成失敗");
 		return false;
 	}
 
@@ -114,5 +126,76 @@ bool FWK::GraphicsDevice::CreateDevice()
 		}
 	}
 
-	return false;
+	return true;
+}
+
+bool FWK::GraphicsDevice::CreateCommandList()
+{
+	if (!m_device)
+	{
+		return false;
+	}
+
+	auto l_hr = m_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT , IID_PPV_ARGS(&m_cmdAllocator));
+
+	if (FAILED(l_hr))
+	{
+		return false;
+	}
+
+	l_hr = m_device->CreateCommandList(0							  , 
+									   D3D12_COMMAND_LIST_TYPE_DIRECT ,
+									   m_cmdAllocator.Get()			  , 
+									   nullptr						  , 
+									   IID_PPV_ARGS(&m_cmdList));
+
+	if (FAILED(l_hr))
+	{
+		return false;
+	}
+
+	D3D12_COMMAND_QUEUE_DESC l_cmdQueueDesc = {};
+	l_cmdQueueDesc.Flags				    = D3D12_COMMAND_QUEUE_FLAG_NONE;	   // タイムアウトなし
+	l_cmdQueueDesc.NodeMask                 = 0;								   // アダプターを一つしか使わない時は"0"でいい
+	l_cmdQueueDesc.Priority                 = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL; // プライオリティは特に指定なし
+	l_cmdQueueDesc.Type                     = D3D12_COMMAND_LIST_TYPE_DIRECT;	   // コマンドリストと合わせる
+
+	// キュー作成
+	l_hr = m_device->CreateCommandQueue(&l_cmdQueueDesc , IID_PPV_ARGS(&m_cmdQueue));
+
+	if (FAILED(l_hr))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool FWK::GraphicsDevice::CreateSwapChain(const HWND a_hWND, const FWK::CommonStruct::Dimension2D& a_size)
+{
+	if (!m_dxgiFactory) { return false; }
+
+	DXGI_SWAP_CHAIN_DESC1 l_swapChainDesc = {};
+	l_swapChainDesc.Width                 = a_size.width;
+	l_swapChainDesc.Height                = a_size.height;
+	l_swapChainDesc.Format                = DXGI_FORMAT_R8G8B8A8_UNORM;
+	l_swapChainDesc.SampleDesc.Count      = 1;
+	l_swapChainDesc.BufferUsage           = DXGI_USAGE_BACK_BUFFER;
+	l_swapChainDesc.BufferCount           = 2;
+	l_swapChainDesc.SwapEffect            = DXGI_SWAP_EFFECT_FLIP_DISCARD;			// フリップ後は速やかに破棄
+	l_swapChainDesc.Flags				  = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // ウィンドウとフルスクリーン切り替え可能
+
+	auto l_result = m_dxgiFactory->CreateSwapChainForHwnd(m_cmdQueue.Get() , 
+														  a_hWND           , 
+													      &l_swapChainDesc , 
+														  nullptr          ,
+														  nullptr          ,
+														  (IDXGISwapChain1**) m_swapChain.ReleaseAndGetAddressOf());
+
+	if (FAILED(l_result))
+	{
+		return false;
+	}
+
+	return true;
 }
