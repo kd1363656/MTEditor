@@ -16,7 +16,7 @@ namespace FWK::Graphics
 		int CreateRTV(ID3D12Resource* a_buffer);
 
 		// "RTV"‚Ì"CPU"‘¤ƒAƒhƒŒƒX
-		D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUHandle(const int a_number);
+		D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUHandle(const int a_number) const;
 
 	private:
 

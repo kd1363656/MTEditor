@@ -42,7 +42,11 @@ int FWK::Graphics::RTVHeap::CreateRTV(ID3D12Resource* a_buffer)
 	return m_nextRegisterNumber++;
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE FWK::Graphics::RTVHeap::GetRTVCPUHandle(const int a_number)
+D3D12_CPU_DESCRIPTOR_HANDLE FWK::Graphics::RTVHeap::GetRTVCPUHandle(const int a_number) const
 {
-	return D3D12_CPU_DESCRIPTOR_HANDLE();
+	D3D12_CPU_DESCRIPTOR_HANDLE l_handle = m_heap->GetCPUDescriptorHandleForHeapStart();
+
+	l_handle.ptr += (UINT64)m_incrementSize * a_number;
+
+	return l_handle;
 }

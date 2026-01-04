@@ -56,12 +56,42 @@ bool FWK::Graphics::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStr
 void FWK::Graphics::GraphicsDevice::ScreenFlip()
 {
 	if (!m_swapChain) { return; }
+	if (!m_cmdQueue)  { return; }
+	if (!m_rtvHeap)   { return; }
+	if (!m_cmdList)   { return; }
 
 	// リソースバリアのステートをレンダーターゲットに変更
 	auto l_bbIDX = m_swapChain->GetCurrentBackBufferIndex();
 	SetResourceBarrier(m_swapChainBuffers[l_bbIDX].Get() , D3D12_RESOURCE_STATE_PRESENT , D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	// レンダーターゲットをセット
+	auto l_rtvH = m_rtvHeap->GetRTVCPUHandle(l_bbIDX);
+	m_cmdList->OMSetRenderTargets(1       , 
+								  &l_rtvH , 
+								  false   , 
+								  nullptr);
+
+	// セットしたレンダーターゲットの画面をクリア
+	float l_clearColor[] = { 1.0f , 0.0f , 1.0f , 1.0f };					// 紫色
+	m_cmdList->ClearRenderTargetView(l_rtvH , l_clearColor , 0 , nullptr);
+
+	// リソースバリアのステートをプレゼントに戻す
+	SetResourceBarrier(m_swapChainBuffers[l_bbIDX].Get() , D3D12_RESOURCE_STATE_RENDER_TARGET , D3D12_RESOURCE_STATE_PRESENT);
+
+	// コマンドリストを閉じて実行
+	m_cmdList->Close();
+	ID3D12CommandList* l_cmdLists[] = { m_cmdList.Get() };
+	m_cmdQueue->ExecuteCommandLists(1 , l_cmdLists);
+
+	// コマンドリストの動機を持つ
+	WaitForCommandQueue();
+
+	// コマンドアロケータとコマンドリストを初期化
+	m_cmdAllocator->Reset();								// コマンドアロケーターの初期化
+	m_cmdList->Reset     (m_cmdAllocator.Get() , nullptr);  // コマンドリストの初期化
+
+	// スワップチェインにプレゼント(送る)
+	m_swapChain->Present(1 , 0);
 }
 
 void FWK::Graphics::GraphicsDevice::WaitForCommandQueue()
@@ -189,11 +219,6 @@ bool FWK::Graphics::GraphicsDevice::CreateDevice()
 
 bool FWK::Graphics::GraphicsDevice::CreateCommandList()
 {
-	if (!m_device)
-	{
-		return false;
-	}
-
 	auto l_hr = m_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT , IID_PPV_ARGS(&m_cmdAllocator));
 
 	if (FAILED(l_hr))
@@ -300,7 +325,7 @@ bool FWK::Graphics::GraphicsDevice::CreateFence()
 	return true;
 }
 
-void FWK::Graphics::GraphicsDevice::SetResourceBarrier(ID3D12Resource* a_resource, D3D12_RESOURCE_STATES a_before, D3D12_RESOURCE_STATES a_after)
+void FWK::Graphics::GraphicsDevice::SetResourceBarrier(ID3D12Resource* a_resource , D3D12_RESOURCE_STATES a_before , D3D12_RESOURCE_STATES a_after) const
 {
 	if (!m_cmdList) { return; }
 
