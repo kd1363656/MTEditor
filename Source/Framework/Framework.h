@@ -24,3 +24,7 @@
 
 // "Mesh"
 #include "Graphics/Mesh/FWKMesh.h"
+
+// "RootSignature"
+#include "Graphics/Shader/RootSignature/FWKRootSignature.h"
+#include "Graphics/Shader/Pipeline/FWKPipeline.h"
