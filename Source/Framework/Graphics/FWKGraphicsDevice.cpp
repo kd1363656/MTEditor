@@ -7,15 +7,15 @@ bool FWK::Graphics::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStr
 	EnableDebugLayer();
 #endif
 
-	if (!CreateDevice())
-	{
-		assert(false && "\"D3D12\"デバイス作成失敗");
-		return false;
-	}
-
 	if (!CreateFactory())
 	{
 		assert(false && "ファクトリー作成失敗");
+		return false;
+	}
+
+	if (!CreateDevice())
+	{
+		assert(false && "\"D3D12\"デバイス作成失敗");
 		return false;
 	}
 
@@ -164,9 +164,9 @@ bool FWK::Graphics::GraphicsDevice::CreateFactory()
 
 bool FWK::Graphics::GraphicsDevice::CreateDevice()
 {
-	Microsoft::WRL::ComPtr<IDXGIAdapter>              l_selectAdapter = nullptr;
-	std::vector<Microsoft::WRL::ComPtr<IDXGIAdapter>> l_adapters;
-	std::vector<DXGI_ADAPTER_DESC>					  l_descs;
+	WFK::ComPtr<IDXGIAdapter>              l_selectAdapter = nullptr;
+	std::vector<WFK::ComPtr<IDXGIAdapter>> l_adapters;
+	std::vector<DXGI_ADAPTER_DESC>		   l_descs;
 
 	// もしファクトリーがインスタンス化されていなければ
 	if (!m_dxgiFactory) 

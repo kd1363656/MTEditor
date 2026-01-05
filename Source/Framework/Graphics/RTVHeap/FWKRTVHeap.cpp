@@ -1,12 +1,12 @@
-#include "FWKGraphicsRTVHeap.h"
+#include "FWKRTVHeap.h"
 
 bool FWK::Graphics::RTVHeap::Create(ID3D12Device* a_device, const int a_useCount)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC l_heapDesc = {};
 
-	l_heapDesc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;	 // レンダーターゲットとして扱う
-	l_heapDesc.NodeMask       = 0;
-	l_heapDesc.NumDescriptors = a_useCount;
+	l_heapDesc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;	 // レンダーターゲットビューなので"RTV"
+	l_heapDesc.NodeMask       = 0;								 // "GPU"を一つだけ使用する想定
+	l_heapDesc.NumDescriptors = a_useCount;						 // レンダーターゲットの表画面と裏画面の二つ
 	l_heapDesc.Flags		  = D3D12_DESCRIPTOR_HEAP_FLAG_NONE; // 特に指定なし
 
 	auto l_hr = a_device->CreateDescriptorHeap(&l_heapDesc , IID_PPV_ARGS(&m_heap));

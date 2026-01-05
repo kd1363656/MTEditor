@@ -146,12 +146,14 @@
     <ClInclude Include="..\Library\json.hpp" />
     <ClInclude Include="..\Library\strconv2.h" />
     <ClInclude Include="Source\Application\Application.h" />
+    <ClInclude Include="Source\Framework\Definition\Alias\FWKCommonAlias.h" />
     <ClInclude Include="Source\Framework\Definition\Constant\FWKCommonConstant.h" />
     <ClInclude Include="Source\Framework\Definition\Struct\FWKCommonStruct.h" />
     <ClInclude Include="Source\Framework\FPS\FWKFPSController.h" />
     <ClInclude Include="Source\Framework\Framework.h" />
     <ClInclude Include="Source\Framework\Graphics\FWKGraphicsDevice.h" />
-    <ClInclude Include="Source\Framework\Graphics\RTVHeap\FWKGraphicsRTVHeap.h" />
+    <ClInclude Include="Source\Framework\Graphics\Mesh\FWKMesh.h" />
+    <ClInclude Include="Source\Framework\Graphics\RTVHeap\FWKRTVHeap.h" />
     <ClInclude Include="Source\Framework\Singleton\FWKSingletonBase.h" />
     <ClInclude Include="Source\Framework\Utility\FileIO\FWKFileIOUtility.h" />
     <ClInclude Include="Source\Framework\Window\FWKWindow.h" />
@@ -161,7 +163,8 @@
     <ClCompile Include="Source\Application\Application.cpp" />
     <ClCompile Include="Source\Framework\FPS\FWKFPSController.cpp" />
     <ClCompile Include="Source\Framework\Graphics\FWKGraphicsDevice.cpp" />
-    <ClCompile Include="Source\Framework\Graphics\RTVHeap\FWKGraphicsRTVHeap.cpp" />
+    <ClCompile Include="Source\Framework\Graphics\Mesh\FWKMesh.cpp" />
+    <ClCompile Include="Source\Framework\Graphics\RTVHeap\FWKRTVHeap.cpp" />
     <ClCompile Include="Source\Framework\Window\FWKWindow.cpp" />
     <ClCompile Include="Source\PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -174,7 +177,17 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PCH.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\directxtk12_uwp.2025.10.28.1\build\native\directxtk12_uwp.targets" Condition="Exists('packages\directxtk12_uwp.2025.10.28.1\build\native\directxtk12_uwp.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\directxtk12_uwp.2025.10.28.1\build\native\directxtk12_uwp.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk12_uwp.2025.10.28.1\build\native\directxtk12_uwp.targets'))" />
+  </Target>
 </Project>

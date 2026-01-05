@@ -60,6 +60,10 @@
 #pragma comment(lib , "d3d12.lib")
 #pragma comment(lib , "dxgi.lib")
 
+// "DirectX Tool Kit"
+#pragma comment(lib , "DirectXTK12.lib")
+#include <SimpleMath.h>
+
 // =========================================================================================
 // ŠO•”ƒ‰ƒCƒuƒ‰ƒŠ
 // =========================================================================================

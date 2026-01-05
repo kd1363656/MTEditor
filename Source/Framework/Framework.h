@@ -1,6 +1,7 @@
 #pragma once
 
 // 定数などの定義
+#include "Definition/Alias/FWKCommonAlias.h"
 #include "Definition/Constant/FWKCommonConstant.h"
 #include "Definition/Struct/FWKCommonStruct.h"
 
@@ -16,5 +17,5 @@
 #include "FPS/FWKFPSController.h"
 
 // 描画関係のデバイス
-#include "Graphics/RTVHeap/FWKGraphicsRTVHeap.h"
+#include "Graphics/RTVHeap/FWKRTVHeap.h"
 #include "Graphics/FWKGraphicsDevice.h"

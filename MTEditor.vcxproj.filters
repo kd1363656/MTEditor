@@ -43,6 +43,12 @@
     <Filter Include="Source\Framework\Graphics\RTVHeap">
       <UniqueIdentifier>{ed8c2ea7-a9fc-428d-b904-996b4b244fc5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Framework\Definition\Alias">
+      <UniqueIdentifier>{dfd7e6c6-9ff2-41cf-82bd-4c91845bc933}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Framework\Graphics\Mesh">
+      <UniqueIdentifier>{fb2f033e-fbdc-4da0-8a69-44dad6bdd4ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\PCH.h">
@@ -81,8 +87,14 @@
     <ClInclude Include="Source\Framework\Graphics\FWKGraphicsDevice.h">
       <Filter>Source\Framework\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Framework\Graphics\RTVHeap\FWKGraphicsRTVHeap.h">
+    <ClInclude Include="Source\Framework\Graphics\RTVHeap\FWKRTVHeap.h">
       <Filter>Source\Framework\Graphics\RTVHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Definition\Alias\FWKCommonAlias.h">
+      <Filter>Source\Framework\Definition\Alias</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Graphics\Mesh\FWKMesh.h">
+      <Filter>Source\Framework\Graphics\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -101,8 +113,14 @@
     <ClCompile Include="Source\Framework\Graphics\FWKGraphicsDevice.cpp">
       <Filter>Source\Framework\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Framework\Graphics\RTVHeap\FWKGraphicsRTVHeap.cpp">
+    <ClCompile Include="Source\Framework\Graphics\RTVHeap\FWKRTVHeap.cpp">
       <Filter>Source\Framework\Graphics\RTVHeap</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Framework\Graphics\Mesh\FWKMesh.cpp">
+      <Filter>Source\Framework\Graphics\Mesh</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

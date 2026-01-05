@@ -19,9 +19,9 @@ namespace FWK::Graphics
 		D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUHandle(const int a_number) const;
 
 	private:
-
-		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heap   = nullptr;
-		ID3D12Device*							     m_device = nullptr;
+		
+		WFK::ComPtr<ID3D12DescriptorHeap> m_heap   = nullptr;
+		ID3D12Device*					  m_device = nullptr;
 
 		int m_useCount           = 0;
 		int m_incrementSize      = 0;
