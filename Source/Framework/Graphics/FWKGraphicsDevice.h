@@ -52,8 +52,8 @@ namespace FWK::Graphics
 
 		std::array<Microsoft::WRL::ComPtr<ID3D12Resource> , 2LLU> m_swapChainBuffers;
 
-		Microsoft::WRL::ComPtr<ID3D12Device8>   m_device      = nullptr;
-		Microsoft::WRL::ComPtr<IDXGIFactory6>   m_dxgiFactory = nullptr;
+		Microsoft::WRL::ComPtr<ID3D12Device8> m_device      = nullptr;
+		Microsoft::WRL::ComPtr<IDXGIFactory6> m_dxgiFactory = nullptr;
 
 		Microsoft::WRL::ComPtr<ID3D12CommandAllocator>     m_cmdAllocator = nullptr;
 		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList6> m_cmdList      = nullptr;
@@ -73,7 +73,11 @@ namespace FWK::Graphics
 		// ===================
 		friend class FWK::SingletonBase<FWK::Graphics::GraphicsDevice>;
 
-		GraphicsDevice ()          = default;
-		~GraphicsDevice() override = default;
+		GraphicsDevice () = default;
+		~GraphicsDevice() override
+		{
+			// コマンドキュー実行中にリソースが解放されることを防ぐ
+			WaitForCommandQueue();
+		}
 	};
 }
