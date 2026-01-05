@@ -2,12 +2,6 @@
 
 bool FWK::Graphics::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStruct::Dimension2D& a_size)
 {
-	if (!CreateFactory())
-	{
-		assert(false && "ファクトリー作成失敗");
-		return false;
-	}
-
 	// デバック処理は比較的重たいので"Debug"の時のみ有効
 #ifdef _DEBUG
 	EnableDebugLayer();
@@ -16,6 +10,12 @@ bool FWK::Graphics::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStr
 	if (!CreateDevice())
 	{
 		assert(false && "\"D3D12\"デバイス作成失敗");
+		return false;
+	}
+
+	if (!CreateFactory())
+	{
+		assert(false && "ファクトリー作成失敗");
 		return false;
 	}
 
@@ -60,6 +60,36 @@ bool FWK::Graphics::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStr
 
 void FWK::Graphics::GraphicsDevice::ScreenFlip()
 {
+	if (!m_swapChain)
+	{
+		assert(false && "\"SwapChain\"の作製ができていません。");
+		return;
+	}
+
+	if (!m_rtvHeap)
+	{
+		assert(false && "\"RTVHeap\"の初期化ができていません。");
+		return;
+	}
+
+	if (!m_cmdList)
+	{
+		assert(false && "コマンドリストの初期化ができていません。");
+		return;
+	}
+
+	if (!m_cmdQueue)
+	{
+		assert(false && "コマンドキューの作製ができていません。");
+		return;
+	}
+
+	if (!m_cmdAllocator)
+	{
+		assert(false && "コマンドアロケーターの作製ができていません。");
+		return;
+	}
+
 	// リソースバリアのステートをレンダーターゲットに変更
 	auto l_bbIDX = m_swapChain->GetCurrentBackBufferIndex();
 	SetResourceBarrier(m_swapChainBuffers[l_bbIDX].Get() , D3D12_RESOURCE_STATE_PRESENT , D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -120,6 +150,8 @@ bool FWK::Graphics::GraphicsDevice::CreateFactory()
 
 	l_flagsDXGI |= DXGI_CREATE_FACTORY_DEBUG;
 
+	// "IID_PPV_ARGS"は引数にポインターのアドレスを渡すと"REFIID"に変換してくれる
+	// "REFIID"は受け取りたいオブジェクトの型を識別するための"ID"
 	auto l_result = CreateDXGIFactory2(l_flagsDXGI , IID_PPV_ARGS(m_dxgiFactory.GetAddressOf()));
 
 	if (FAILED(l_result))
@@ -135,6 +167,13 @@ bool FWK::Graphics::GraphicsDevice::CreateDevice()
 	Microsoft::WRL::ComPtr<IDXGIAdapter>              l_selectAdapter = nullptr;
 	std::vector<Microsoft::WRL::ComPtr<IDXGIAdapter>> l_adapters;
 	std::vector<DXGI_ADAPTER_DESC>					  l_descs;
+
+	// もしファクトリーがインスタンス化されていなければ
+	if (!m_dxgiFactory) 
+	{
+		assert(false && "\"DXGIFactory\"のインスタンス化ができていません。");
+		return false; 
+	}
 
 	// 使用中"PC"にある"GPU"ドライバーを検索して、あれば格納する
 	for (UINT l_index = 0U; true; ++l_index)
@@ -192,7 +231,7 @@ bool FWK::Graphics::GraphicsDevice::CreateDevice()
 		}
 	}
 
-	D3D_FEATURE_LEVEL l_levels[] =
+	const D3D_FEATURE_LEVEL l_levels[] =
 	{
 		D3D_FEATURE_LEVEL_12_1 ,
 		D3D_FEATURE_LEVEL_12_0 ,
@@ -201,13 +240,14 @@ bool FWK::Graphics::GraphicsDevice::CreateDevice()
 	};
 
 	// "Direct3D"デバイスの初期化
-	D3D_FEATURE_LEVEL l_featureLevel;
-	for (const auto& l_lv : l_levels)
+	for (D3D_FEATURE_LEVEL l_featureLevel;
+		const auto& l_lv : l_levels)
 	{
 		if (D3D12CreateDevice(l_selectAdapter.Get() , l_lv , IID_PPV_ARGS(&m_device)) == S_OK)
 		{
+			// 生産可能なバージョンが見つかったらループ打ち切り
 			l_featureLevel = l_lv;
-			break;				   // 生産可能なバージョンが見つかったらループ打ち切り
+			break;
 		}
 	}
 
@@ -216,6 +256,13 @@ bool FWK::Graphics::GraphicsDevice::CreateDevice()
 
 bool FWK::Graphics::GraphicsDevice::CreateCommandList()
 {
+	if (!m_device)
+	{
+		assert(false && "デバイスの初期化ができていません。");
+		return false;
+	}
+
+	// コマンドリストとコマンドアロケーターを作成
 	auto l_hr = m_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT , IID_PPV_ARGS(&m_cmdAllocator));
 
 	if (FAILED(l_hr))
@@ -255,16 +302,23 @@ bool FWK::Graphics::GraphicsDevice::CreateSwapChain(const HWND a_hWND, const FWK
 {
 	if (!m_dxgiFactory) 
 	{
+		assert(false && "\"DXGIFactory\"のインスタンス化がされていません。");
 		return false; 
 	}
 
+	if (!m_cmdQueue)
+	{
+		assert(false && "\"コマンドキューの作製ができていません。\"");
+		return false;
+	}
+
 	DXGI_SWAP_CHAIN_DESC1 l_swapChainDesc = {};
-	l_swapChainDesc.Width                 = a_size.width;
-	l_swapChainDesc.Height                = a_size.height;
-	l_swapChainDesc.Format                = DXGI_FORMAT_R8G8B8A8_UNORM;
-	l_swapChainDesc.SampleDesc.Count      = 1;
-	l_swapChainDesc.BufferUsage           = DXGI_USAGE_BACK_BUFFER;
-	l_swapChainDesc.BufferCount           = 2;
+	l_swapChainDesc.Width                 = a_size.width;							// 画面解像度(幅)
+	l_swapChainDesc.Height                = a_size.height;							// 画面解像度(高さ)
+	l_swapChainDesc.Format                = DXGI_FORMAT_R8G8B8A8_UNORM;				// ピクセルフォーマット
+	l_swapChainDesc.SampleDesc.Count      = 1;										// マルチサンプルの指定
+	l_swapChainDesc.BufferUsage           = DXGI_USAGE_BACK_BUFFER;				
+	l_swapChainDesc.BufferCount           = 2;										// バッファの数、ダブルバッファーなら"2"でいい
 	l_swapChainDesc.SwapEffect            = DXGI_SWAP_EFFECT_FLIP_DISCARD;			// フリップ後は速やかに破棄
 	l_swapChainDesc.Flags				  = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // ウィンドウとフルスクリーン切り替え可能
 
@@ -285,6 +339,18 @@ bool FWK::Graphics::GraphicsDevice::CreateSwapChain(const HWND a_hWND, const FWK
 
 bool FWK::Graphics::GraphicsDevice::CreateSwapChainRTV()
 {
+	if (!m_swapChain)
+	{
+		assert(false && "\SwapChain\"が作成されていません。");
+		return false;
+	}
+
+	if (!m_rtvHeap)
+	{
+		assert(false && "\RTVHeap\"の初期化ができていません。");
+		return false;
+	}
+
 	for (int l_i = 0; l_i < (int)m_swapChainBuffers.size(); ++l_i)
 	{
 		auto l_hr = m_swapChain->GetBuffer(l_i , IID_PPV_ARGS(&m_swapChainBuffers[l_i]));
@@ -302,6 +368,12 @@ bool FWK::Graphics::GraphicsDevice::CreateSwapChainRTV()
 
 bool FWK::Graphics::GraphicsDevice::CreateFence()
 {
+	if (!m_device)
+	{
+		assert(false && "デバイスの初期化ができていません。");
+		return false;
+	}
+
 	auto l_result = m_device->CreateFence(m_fenceVal , D3D12_FENCE_FLAG_NONE , IID_PPV_ARGS(&m_fence));
 
 	if (FAILED(l_result))

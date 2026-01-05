@@ -21,8 +21,8 @@ namespace FWK
 
 		HWND GetHWND() const { return m_hWND; }
 
-		// "Windows"にアプリを識別させるために必要
-		HINSTANCE GetInstanceHandle() const { return GetModuleHandle(nullptr); }
+		// 呼び出し元プロセス(".exe"ファイル)の作製に使用されるファイルへのハンドルを返す
+		HINSTANCE GetInstanceHandle() const { return GetModuleHandle(NULL); }
 
 	private:
 

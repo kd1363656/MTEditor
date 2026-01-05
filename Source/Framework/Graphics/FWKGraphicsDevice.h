@@ -55,11 +55,12 @@ namespace FWK::Graphics
 		Microsoft::WRL::ComPtr<ID3D12Device8> m_device      = nullptr;
 		Microsoft::WRL::ComPtr<IDXGIFactory6> m_dxgiFactory = nullptr;
 
-		Microsoft::WRL::ComPtr<ID3D12CommandAllocator>     m_cmdAllocator = nullptr;
-		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList6> m_cmdList      = nullptr;
-		Microsoft::WRL::ComPtr<ID3D12CommandQueue>         m_cmdQueue     = nullptr;
+		Microsoft::WRL::ComPtr<ID3D12CommandAllocator>     m_cmdAllocator = nullptr;		// "GPU"に対する命令を保持するリスト
+		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList6> m_cmdList      = nullptr;		// 命令のためのインターフェース、必ず"Close"命令を入れないと"GPU"は命令を実行できない
+		Microsoft::WRL::ComPtr<ID3D12CommandQueue>         m_cmdQueue     = nullptr;		// コマンドリストを用いて描画などの命令を実行
 		
-		Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain = nullptr;
+		// ダブルバッファリングによるレンダーターゲットで画面のちらつきを無くすために必要
+		Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain = nullptr; 
 
 		// コマンドキューの実行同期をとるためのもの
 		Microsoft::WRL::ComPtr<ID3D12Fence> m_fence = nullptr;

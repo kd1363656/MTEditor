@@ -2,12 +2,13 @@
 
 bool FWK::Window::Create(const FWK::CommonStruct::Dimension2D& a_size , const std::string& a_titleName , const std::string& a_windowClassName)
 {
-	// 現在の実行ファイルのハンドルを返す
+	// 現在の実行ファイル(.exe)のハンドルを取得
 	HINSTANCE l_hInst = GetInstanceHandle();
 
-	// ウィンドウクラス名をワイド文字列に変換
+	// "std::string"型を"std::wstring"型に変換
+	// 変換する理由はウィンドウクラス名に文字列を渡す際に"std::wstring"でないと型エラーが発生するため
 	std::wstring l_wndClassName = sjis_to_wide(a_windowClassName);
-
+	
 	// ウィンドウクラスの定義
 	WNDCLASSEX l_wc = {};
 
@@ -24,26 +25,31 @@ bool FWK::Window::Create(const FWK::CommonStruct::Dimension2D& a_size , const st
 	l_wc.lpszMenuName  = nullptr;								// メニューリソースの名前
 	l_wc.lpszClassName = l_wndClassName.c_str();				// ウィンドウクラス名
 
-	// ウィンドウクラスを"OS"に登録
+	// ウィンドウクラスを登録
+	// 戻り値は登録されているクラスを一意に識別するクラスアトム
+	// (クラスアトムは文字列と対応する識別子を格納するシステム定義テーブル)
+	// 失敗した場合戻り値は"0"つまり"false"と同等の評価
 	if (!RegisterClassEx(&l_wc))
 	{
 		return false;
 	}
 
+	std::wstring l_titleName = sjis_to_wide(a_titleName);
+
 	// ウィンドウの作成
-	m_hWND = CreateWindow(l_wndClassName.c_str()                   ,	 // 登録済みのウィンドウクラス名
-						  sjis_to_wide(a_titleName.data()).c_str() , // ウィンドウのタイトル(ワイド文字列に変換したもの)
-						  WS_OVERLAPPEDWINDOW - WS_THICKFRAME      , // 標準ウィンドウからサイズ変更用の太い枠を除いたスタイル
-						  k_defaultWindowPosX					   , // ウィンドウ座標"X"
-						  k_defaultWindowPosY					   , // ウィンドウ座標"Y"
-						  a_size.width							   , // クライアント領域の幅
-						  a_size.height							   , // クライアント領域の高さ
-						  nullptr								   , // 親ウィンドウがない
-					      nullptr								   , // メニューなし
-						  l_hInst								   , // アプリケーションのインスタンスハンドル
-						  this);									 // 作製するウィンドウに"this"ポインタを渡す、"WM_CREATE"などで取り出せる
+	m_hWND = CreateWindow(l_wndClassName.c_str()              ,	// 登録済みのウィンドウクラス名
+						  l_titleName.c_str()				  , // ウィンドウのタイトル
+						  WS_OVERLAPPEDWINDOW - WS_THICKFRAME , // 標準ウィンドウからサイズ変更用の太い枠を除いたスタイル
+						  k_defaultWindowPosX				  , // ウィンドウ座標"X"
+						  k_defaultWindowPosY				  , // ウィンドウ座標"Y"
+						  a_size.width						  , // クライアント領域の幅
+						  a_size.height						  , // クライアント領域の高さ
+						  nullptr							  , // 親ウィンドウがない
+					      nullptr							  , // メニューなし
+						  l_hInst							  , // アプリケーションのインスタンスハンドル
+						  this);								// 作製するウィンドウに"this"ポインタを渡す、"WM_CREATE"などで取り出せる
 	
-	// ウィンドウの作製がうまくいかなければ"false"
+	// ウィンドウの作製が上手くいっていなければ"false"
 	if (!m_hWND)
 	{
 		// メモリリーク防止
@@ -54,9 +60,9 @@ bool FWK::Window::Create(const FWK::CommonStruct::Dimension2D& a_size , const st
 	// クライアントのサイズを設定
 	SetClientSize(a_size);
 
-	// ウィンドウの表示
+	// ウィンドウの表示を設定
 	ShowWindow(m_hWND , SW_SHOW);
-	// ウィンドウのクライアント領域をすぐに再描画
+	// ウィンドウのクライアント領域をすぐに更新(クライアント領域をすぐに塗りつぶす)
 	UpdateWindow(m_hWND);
 
 	// "timeGetTime"関数の精度を"1ms"に設定
@@ -112,12 +118,13 @@ void FWK::Window::SetClientSize(const FWK::CommonStruct::Dimension2D& a_size)
 	GetWindowRect(m_hWND , &l_rcWND);
 	GetClientRect(m_hWND , &l_rcClient);
 
+	// インスタンスハンドルからウィンドウの位置と寸法を変更
 	MoveWindow(m_hWND																			       , // 対象のウィンドウ 
 			   l_rcWND.left																		       , // 左上の"X"座標
 			   l_rcWND.top																		       , // 左上の"Y"座標
 			   a_size.width  + (l_rcWND.right  - l_rcWND.left) - (l_rcClient.right  - l_rcClient.left) , // ウィンドウ全体の幅(枠含む)
 			   a_size.height + (l_rcWND.bottom - l_rcWND.top)  - (l_rcClient.bottom - l_rcClient.top)  , // ウィンドウ全体の高さ(枠含む)
-			   TRUE);	
+			   TRUE);																					 // ウィンドウを再描画するかどうかもし"TRUE"ならウィンドウはメッセージを受信
 }
 
 LRESULT CALLBACK FWK::Window::CallWindowProcedure(const HWND   a_hWND    , 
@@ -177,6 +184,8 @@ LRESULT FWK::Window::WindowProcedure(const HWND   a_hWND    ,
 		case WM_DESTROY:
 		{
 			RemoveProp(a_hWND , L"GameWindowInstance");
+			
+			// "OS"に対してこのアプリの終了を伝える
 			PostQuitMessage(0);
 		}
 		break;
