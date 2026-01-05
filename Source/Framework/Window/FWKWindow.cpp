@@ -14,7 +14,7 @@ bool FWK::Window::Create(const FWK::CommonStruct::Dimension2D& a_size , const st
 
 	l_wc.cbSize        = sizeof(WNDCLASSEX);						// 構造体のサイズを設定
 	l_wc.style         = k_windowStyleDefault;					// ウィンドウの動作スタイル(サイズ変更時に再描画など)			
-	l_wc.lpfnWndProc   = &FWK::Window::CallWindowProcedure;		// 関数を指定し指定した関数がウィンドウに届いたすべてのメッセージを処理
+	l_wc.lpfnWndProc   = &Window::CallWindowProcedure;			// 関数を指定し指定した関数がウィンドウに届いたすべてのメッセージを処理
 	l_wc.cbClsExtra    = k_classExtraBytes;						// ウィンドウクラス用に追加で確保するメモリサイズ
 	l_wc.cbWndExtra    = k_windowExtraBytes;						// ウィンドウごとに追加で確保するメモリサイズ
 	l_wc.hInstance     = l_hInst;								// アプリケーションのインスタンスハンドル
@@ -132,7 +132,7 @@ LRESULT CALLBACK FWK::Window::CallWindowProcedure(const HWND   a_hWND    ,
 												  const WPARAM a_wParam  , 
 												  const LPARAM a_lParam)
 {
-	auto* l_this = static_cast<FWK::Window*>(GetProp(a_hWND , L"GameWindowInstance"));
+	auto* l_this = static_cast<Window*>(GetProp(a_hWND , L"GameWindowInstance"));
 
 	// "nullptr"の場合はデフォルト処理を実行
 	if (!l_this)
@@ -141,7 +141,7 @@ LRESULT CALLBACK FWK::Window::CallWindowProcedure(const HWND   a_hWND    ,
 		{
 			// "CreateWindow"で渡したパラメータを取得
 			auto* l_createStruct = (CREATESTRUCT*)a_lParam;
-			auto* l_window       = (FWK::Window*)l_createStruct->lpCreateParams;
+			auto* l_window       = (Window*)l_createStruct->lpCreateParams;
 
 			// ウィンドウプロパティにこのクラスのインスタンスアドレスを埋め込んでおく
 			// 次回から、"l_this->WindowProcedure"の方へ処理が流れていく

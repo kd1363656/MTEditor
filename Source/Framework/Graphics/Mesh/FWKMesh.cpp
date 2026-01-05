@@ -16,7 +16,7 @@ void FWK::Graphics::Mesh::Create(FWK::Graphics::GraphicsDevice* a_graphicsDevice
 
 	D3D12_RESOURCE_DESC l_resDesc = {};
 	l_resDesc.Dimension           = D3D12_RESOURCE_DIMENSION_BUFFER;
-	l_resDesc.Width               = sizeof(FWK::Math::Vector3) * m_vertices.size();
+	l_resDesc.Width               = sizeof(Math::Vector3) * m_vertices.size();
 	l_resDesc.Height              = 1;
 	l_resDesc.DepthOrArraySize    = 1;
 	l_resDesc.MipLevels           = 1;
@@ -43,10 +43,10 @@ void FWK::Graphics::Mesh::Create(FWK::Graphics::GraphicsDevice* a_graphicsDevice
 
 	m_vBView.BufferLocation = m_vBuffer->GetGPUVirtualAddress();
 	m_vBView.SizeInBytes    = (UINT)l_resDesc.Width;
-	m_vBView.StrideInBytes  = sizeof(FWK::Math::Vector3);
+	m_vBView.StrideInBytes  = sizeof(Math::Vector3);
 
 	// 頂点バッファーに情報を書き込む
-	FWK::Math::Vector3* l_vBMap = nullptr;
+	Math::Vector3* l_vBMap = nullptr;
 	{
 		m_vBuffer->Map  (0					    , nullptr			   , (void**)&l_vBMap);
 		std::copy       (std::begin(m_vertices) , std::end(m_vertices) , l_vBMap);

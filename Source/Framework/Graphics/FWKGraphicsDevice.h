@@ -56,18 +56,18 @@ namespace FWK::Graphics
 
 		std::array<Microsoft::WRL::ComPtr<ID3D12Resource> , 2LLU> m_swapChainBuffers;
 
-		FWK::ComPtr<ID3D12Device8> m_device      = nullptr;
-		FWK::ComPtr<IDXGIFactory6> m_dxgiFactory = nullptr;
+		ComPtr<ID3D12Device8> m_device      = nullptr;
+		ComPtr<IDXGIFactory6> m_dxgiFactory = nullptr;
 
-		FWK::ComPtr<ID3D12CommandAllocator>     m_cmdAllocator = nullptr;		// "GPU"に対する命令を保持するリスト
-		FWK::ComPtr<ID3D12GraphicsCommandList6> m_cmdList      = nullptr;		// 命令のためのインターフェース、必ず"Close"命令を入れないと"GPU"は命令を実行できない
-		FWK::ComPtr<ID3D12CommandQueue>         m_cmdQueue     = nullptr;		// コマンドリストを用いて描画などの命令を実行
+		ComPtr<ID3D12CommandAllocator>     m_cmdAllocator = nullptr;		// "GPU"に対する命令を保持するリスト
+		ComPtr<ID3D12GraphicsCommandList6> m_cmdList      = nullptr;		// 命令のためのインターフェース、必ず"Close"命令を入れないと"GPU"は命令を実行できない
+		ComPtr<ID3D12CommandQueue>         m_cmdQueue     = nullptr;		// コマンドリストを用いて描画などの命令を実行
 		
 		// ダブルバッファリングによるレンダーターゲットで画面のちらつきを無くすために必要
-		FWK::ComPtr<IDXGISwapChain4> m_swapChain = nullptr; 
+		ComPtr<IDXGISwapChain4> m_swapChain = nullptr; 
 
 		// コマンドキューの実行同期をとるためのもの
-		FWK::ComPtr<ID3D12Fence> m_fence = nullptr;
+		ComPtr<ID3D12Fence> m_fence = nullptr;
 
 		std::unique_ptr<FWK::Graphics::RTVHeap> m_rtvHeap = nullptr;
 		

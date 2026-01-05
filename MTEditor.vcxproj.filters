@@ -25,9 +25,6 @@
     <Filter Include="Source\Framework\Definition\Constant">
       <UniqueIdentifier>{a06c82d6-d31f-4c71-93f0-5e14fb7048e0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Framework\Window">
-      <UniqueIdentifier>{48797465-7e49-4e96-b699-41f380c00545}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Framework\FPS">
       <UniqueIdentifier>{7d142c18-9a58-4ca6-860a-21df27b4b39c}</UniqueIdentifier>
     </Filter>
@@ -43,9 +40,6 @@
     <Filter Include="Source\Framework\Graphics\RTVHeap">
       <UniqueIdentifier>{ed8c2ea7-a9fc-428d-b904-996b4b244fc5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Framework\Definition\Alias">
-      <UniqueIdentifier>{dfd7e6c6-9ff2-41cf-82bd-4c91845bc933}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Framework\Graphics\Mesh">
       <UniqueIdentifier>{fb2f033e-fbdc-4da0-8a69-44dad6bdd4ec}</UniqueIdentifier>
     </Filter>
@@ -54,6 +48,27 @@
     </Filter>
     <Filter Include="Asset\Shader">
       <UniqueIdentifier>{634ad0d1-582a-4fe0-9e49-1ff1a2b0c2ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Framework\Graphics\Shader">
+      <UniqueIdentifier>{16a8e8aa-afee-405d-9057-4f3f16343cd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Framework\Graphics\Shader\RootSignature">
+      <UniqueIdentifier>{71d25ad9-c4e1-4799-ae87-8ffbbdecbf4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Framework\Graphics\Shader\Pipeline">
+      <UniqueIdentifier>{98211393-662e-49d6-815f-fc0d464fe2ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System">
+      <UniqueIdentifier>{7f348ffb-ee5c-4f24-aa99-53505909d0c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\Definition">
+      <UniqueIdentifier>{9565595a-a277-4f7e-b438-7a0e61414583}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\Definition\Alias">
+      <UniqueIdentifier>{1605ddd6-37dd-4443-83d2-0cfcfbcb14fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Framework\Window">
+      <UniqueIdentifier>{b84d9da9-3578-4acc-91a3-d9e3f62c151f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -75,9 +90,6 @@
     <ClInclude Include="Source\Application\Application.h">
       <Filter>Source\Application</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Framework\Window\FWKWindow.h">
-      <Filter>Source\Framework\Window</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Framework\FPS\FWKFPSController.h">
       <Filter>Source\Framework\FPS</Filter>
     </ClInclude>
@@ -96,11 +108,26 @@
     <ClInclude Include="Source\Framework\Graphics\RTVHeap\FWKRTVHeap.h">
       <Filter>Source\Framework\Graphics\RTVHeap</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Framework\Definition\Alias\FWKCommonAlias.h">
-      <Filter>Source\Framework\Definition\Alias</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Framework\Graphics\Mesh\FWKMesh.h">
       <Filter>Source\Framework\Graphics\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Graphics\Shader\RootSignature\FWKRootSignature.h">
+      <Filter>Source\Framework\Graphics\Shader\RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Graphics\Shader\Pipeline\FWKPipeline.h">
+      <Filter>Source\Framework\Graphics\Shader\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Graphics\Shader\FWKShader.h">
+      <Filter>Source\Framework\Graphics\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\System.h">
+      <Filter>Source\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Definition\Alias\CommonAlias.h">
+      <Filter>Source\System\Definition\Alias</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Window\FWKWindow.h">
+      <Filter>Source\Framework\Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -109,9 +136,6 @@
     </ClCompile>
     <ClCompile Include="Source\Application\Application.cpp">
       <Filter>Source\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Framework\Window\FWKWindow.cpp">
-      <Filter>Source\Framework\Window</Filter>
     </ClCompile>
     <ClCompile Include="Source\Framework\FPS\FWKFPSController.cpp">
       <Filter>Source\Framework\FPS</Filter>
@@ -124,6 +148,18 @@
     </ClCompile>
     <ClCompile Include="Source\Framework\Graphics\Mesh\FWKMesh.cpp">
       <Filter>Source\Framework\Graphics\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\Graphics\Shader\RootSignature\FWKRootSignature.cpp">
+      <Filter>Source\Framework\Graphics\Shader\RootSignature</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\Graphics\Shader\Pipeline\FWKPipeline.cpp">
+      <Filter>Source\Framework\Graphics\Shader\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\Graphics\Shader\FWKShader.cpp">
+      <Filter>Source\Framework\Graphics\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\Window\FWKWindow.cpp">
+      <Filter>Source\Framework\Window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

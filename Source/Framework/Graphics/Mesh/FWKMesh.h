@@ -17,8 +17,8 @@ namespace FWK::Graphics
 	private:
 
 		FWK::Graphics::GraphicsDevice* m_device  = nullptr;
-		FWK::ComPtr<ID3D12Resource>    m_vBuffer = nullptr;
-		FWK::ComPtr<ID3D12Resource>    m_IBuffer = nullptr;
+		ComPtr<ID3D12Resource>         m_vBuffer = nullptr;
+		ComPtr<ID3D12Resource>         m_IBuffer = nullptr;
 
 		D3D12_VERTEX_BUFFER_VIEW m_vBView;
 		D3D12_INDEX_BUFFER_VIEW  m_iBVew;

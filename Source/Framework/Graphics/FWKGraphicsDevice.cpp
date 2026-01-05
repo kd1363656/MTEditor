@@ -164,9 +164,9 @@ bool FWK::Graphics::GraphicsDevice::CreateFactory()
 
 bool FWK::Graphics::GraphicsDevice::CreateDevice()
 {
-	FWK::ComPtr<IDXGIAdapter>              l_selectAdapter = nullptr;
-	std::vector<FWK::ComPtr<IDXGIAdapter>> l_adapters;
-	std::vector<DXGI_ADAPTER_DESC>		   l_descs;
+	ComPtr<IDXGIAdapter>              l_selectAdapter = nullptr;
+	std::vector<ComPtr<IDXGIAdapter>> l_adapters;
+	std::vector<DXGI_ADAPTER_DESC>	  l_descs;
 
 	// もしファクトリーがインスタンス化されていなければ
 	if (!m_dxgiFactory) 

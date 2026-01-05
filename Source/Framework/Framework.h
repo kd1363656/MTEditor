@@ -1,17 +1,17 @@
 #pragma once
 
 // 定数などの定義
-#include "Definition/Alias/FWKCommonAlias.h"
 #include "Definition/Constant/FWKCommonConstant.h"
 #include "Definition/Struct/FWKCommonStruct.h"
 
+// ファイル入出力
 #include "Utility/FileIO/FWKFileIOUtility.h"
+
+// ウィンドウクラス
+#include "Window/FWKWindow.h"
 
 // 安全なシングルトンを作成するための基底クラス
 #include "Singleton/FWKSingletonBase.h"
-
-// "Window"クラス
-#include "Window/FWKWindow.h"
 
 // "FPS"管理クラス
 #include "FPS/FWKFPSController.h"
