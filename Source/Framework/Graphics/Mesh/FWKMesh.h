@@ -18,10 +18,10 @@ namespace FWK::Graphics
 
 		FWK::Graphics::GraphicsDevice* m_device  = nullptr;
 		ComPtr<ID3D12Resource>         m_vBuffer = nullptr;
-		ComPtr<ID3D12Resource>         m_IBuffer = nullptr;
+		ComPtr<ID3D12Resource>         m_iBuffer = nullptr;
 
-		D3D12_VERTEX_BUFFER_VIEW m_vBView;
-		D3D12_INDEX_BUFFER_VIEW  m_iBVew;
+		D3D12_VERTEX_BUFFER_VIEW m_vbView;
+		D3D12_INDEX_BUFFER_VIEW  m_ibVew;
 
 		std::array<Math::Vector3, 3> m_vertices;
 	};

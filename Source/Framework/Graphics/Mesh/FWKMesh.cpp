@@ -41,9 +41,9 @@ void FWK::Graphics::Mesh::Create(FWK::Graphics::GraphicsDevice* a_graphicsDevice
 		return;
 	}
 
-	m_vBView.BufferLocation = m_vBuffer->GetGPUVirtualAddress();
-	m_vBView.SizeInBytes    = (UINT)l_resDesc.Width;
-	m_vBView.StrideInBytes  = sizeof(Math::Vector3);
+	m_vbView.BufferLocation = m_vBuffer->GetGPUVirtualAddress();
+	m_vbView.SizeInBytes    = (UINT)l_resDesc.Width;
+	m_vbView.StrideInBytes  = sizeof(Math::Vector3);
 
 	// 頂点バッファーに情報を書き込む
 	Math::Vector3* l_vBMap = nullptr;
@@ -58,6 +58,6 @@ void FWK::Graphics::Mesh::DrawInstanced() const
 {
 	if (!m_device) { return; }
 
-	m_device->GetCmdList()->IASetVertexBuffers(0 , 1 , &m_vBView);
+	m_device->GetCmdList()->IASetVertexBuffers(0 , 1 , &m_vbView);
 	m_device->GetCmdList()->DrawInstanced     (3 , 1 , 0 , 0);
 }

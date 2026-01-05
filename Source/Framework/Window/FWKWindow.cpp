@@ -196,6 +196,7 @@ LRESULT FWK::Window::WindowProcedure(const HWND   a_hWND    ,
 								 a_message ,
 								 a_wParam  ,
 								 a_lParam);
+		break;
 	}
 
 	return 0;

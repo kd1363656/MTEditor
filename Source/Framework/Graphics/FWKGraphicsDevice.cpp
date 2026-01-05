@@ -341,13 +341,13 @@ bool FWK::Graphics::GraphicsDevice::CreateSwapChainRTV()
 {
 	if (!m_swapChain)
 	{
-		assert(false && "\SwapChain\"が作成されていません。");
+		assert(false && "\"SwapChain\"が作成されていません。");
 		return false;
 	}
 
 	if (!m_rtvHeap)
 	{
-		assert(false && "\RTVHeap\"の初期化ができていません。");
+		assert(false && "\"RTVHeap\"の初期化ができていません。");
 		return false;
 	}
 

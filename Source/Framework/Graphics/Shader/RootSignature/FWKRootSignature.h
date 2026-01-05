@@ -30,7 +30,7 @@ namespace FWK::Graphics
 		RootSignature () = default;
 		~RootSignature() = default;
 
-		void Create(GraphicsDevice* a_graphicsDevice , const std::vector<RangeType>& a_rangeTypeList);
+		void Create(GraphicsDevice* a_graphicsDevice , const std::vector<FWK::Graphics::RootSignature::RangeType>& a_rangeTypeList);
 
 		// ルートシグネチャの取得
 		ID3D12RootSignature* GetRootSignature() { return m_rootSignature.Get(); }
@@ -38,9 +38,12 @@ namespace FWK::Graphics
 	private:
 
 		// レンジの作成
-		void CreateRange(D3D12_DESCRIPTOR_RANGE& a_range , RangeType a_type , const int a_count);
+		void CreateRange(D3D12_DESCRIPTOR_RANGE& a_range , FWK::Graphics::RootSignature::RangeType a_type , const int a_count);
 
-		void CreateStaticSampler(D3D12_STATIC_SAMPLER_DESC& a_samplerDesc , TextureAddressMode a_mode);
+		void CreateStaticSampler(D3D12_STATIC_SAMPLER_DESC& a_samplerDesc , 
+								 TextureAddressMode         a_mode        , 
+								 D3D12Filter                a_filter	  , 
+								 const int					a_count);
 
 		FWK::Graphics::GraphicsDevice* m_device        = nullptr;
 		ComPtr<ID3DBlob>               m_rootBlob      = nullptr;
