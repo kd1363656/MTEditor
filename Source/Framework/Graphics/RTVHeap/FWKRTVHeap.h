@@ -20,7 +20,7 @@ namespace FWK::Graphics
 
 	private:
 		
-		WFK::ComPtr<ID3D12DescriptorHeap> m_heap   = nullptr;
+		FWK::ComPtr<ID3D12DescriptorHeap> m_heap   = nullptr;
 		ID3D12Device*					  m_device = nullptr;
 
 		int m_useCount           = 0;

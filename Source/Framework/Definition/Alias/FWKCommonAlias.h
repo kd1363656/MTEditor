@@ -1,6 +1,6 @@
 #pragma once
 
-namespace WFK
+namespace FWK
 {
 	using Microsoft::WRL::ComPtr;
 
