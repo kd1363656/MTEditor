@@ -49,6 +49,12 @@
     <Filter Include="Source\Framework\Graphics\Mesh">
       <UniqueIdentifier>{fb2f033e-fbdc-4da0-8a69-44dad6bdd4ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset">
+      <UniqueIdentifier>{188885a2-de0e-4578-9cf4-2947695c4de3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Shader">
+      <UniqueIdentifier>{634ad0d1-582a-4fe0-9e49-1ff1a2b0c2ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\PCH.h">
@@ -122,5 +128,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Asset\Shader\VS_SimpleShader.hlsl">
+      <Filter>Asset\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Asset\Shader\PS_SimpleShader.hlsl">
+      <Filter>Asset\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
