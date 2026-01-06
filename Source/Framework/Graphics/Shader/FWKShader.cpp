@@ -62,19 +62,19 @@ void FWK::Graphics::Shader::Begin(const int a_w, const int a_h)
 	switch (l_topologyType)
 	{
 		case D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT:
-			m_device->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+			l_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 		break;
 
 		case D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE:
-			m_device->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+			l_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 		break;
 
 		case D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE:
-			m_device->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			l_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		break;
 
 		case D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH:
-			m_device->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
+			l_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 		break;
 
 		default:

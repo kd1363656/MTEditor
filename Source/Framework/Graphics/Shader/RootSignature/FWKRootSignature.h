@@ -31,7 +31,7 @@ namespace FWK::Graphics
 	private:
 
 		// ÉåÉìÉWÇÃçÏê¨
-		void CreateRange(D3D12_DESCRIPTOR_RANGE& a_range , const FWK::CommonEnum::RangeType a_type , const int a_count);
+		void CreateRange(D3D12_DESCRIPTOR_RANGE& a_range , const FWK::CommonEnum::RangeType a_type , const int a_count) const;
 
 		void CreateStaticSampler(D3D12_STATIC_SAMPLER_DESC&								a_samplerDesc , 
 								 const FWK::Graphics::RootSignature::TextureAddressMode a_mode        , 

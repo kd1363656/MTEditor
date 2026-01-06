@@ -66,7 +66,7 @@ void FWK::Graphics::GraphicsDevice::Prepare()
 	auto l_rtvH = m_rtvHeap->GetRTVCPUHandle(l_bbIDX);
 	m_cmdList->OMSetRenderTargets(1 , &l_rtvH , false  , nullptr);
 
-	float l_clearColor[] = { 1.0f , 0.0f , 1.0f , 1.0f };				   // ‰©F
+	float l_clearColor[] = { 1.0f , 0.0f , 1.0f , 1.0f };				   // Ž‡F
 	m_cmdList->ClearRenderTargetView(l_rtvH , l_clearColor , 0 , nullptr);
 }
 

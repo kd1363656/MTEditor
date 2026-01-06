@@ -2,12 +2,9 @@
 
 void FWK::Graphics::RootSignature::Create(FWK::Graphics::GraphicsDevice* a_graphicsDevice, const std::vector<FWK::CommonEnum::RangeType>& a_rangeTypeList)
 {
-	m_device = a_graphicsDevice;
+	if (!a_graphicsDevice) { return; }
 
-	if (!m_device)
-	{
-		return;
-	}
+	m_device = a_graphicsDevice;
 
 	D3D12_ROOT_SIGNATURE_DESC l_rootSignatureDesc = {};
 	auto					  l_rangeCount        = (int)a_rangeTypeList.size();
@@ -74,10 +71,10 @@ void FWK::Graphics::RootSignature::Create(FWK::Graphics::GraphicsDevice* a_graph
 
 	if (l_isSampler)
 	{
-		CreateStaticSampler(l_staticSamplerDescs[0] , TextureAddressMode::Wrap  , D3D12Filter::Point  , 0);
-		CreateStaticSampler(l_staticSamplerDescs[1] , TextureAddressMode::Clamp , D3D12Filter::Point  , 1);
-		CreateStaticSampler(l_staticSamplerDescs[2] , TextureAddressMode::Wrap  , D3D12Filter::Linear , 2);
-		CreateStaticSampler(l_staticSamplerDescs[3] , TextureAddressMode::Clamp , D3D12Filter::Linear , 3);
+		CreateStaticSampler(l_staticSamplerDescs[0] , FWK::Graphics::RootSignature::TextureAddressMode::Wrap  , FWK::Graphics::RootSignature::D3D12Filter::Point  , 0);
+		CreateStaticSampler(l_staticSamplerDescs[1] , FWK::Graphics::RootSignature::TextureAddressMode::Clamp , FWK::Graphics::RootSignature::D3D12Filter::Point  , 1);
+		CreateStaticSampler(l_staticSamplerDescs[2] , FWK::Graphics::RootSignature::TextureAddressMode::Wrap  , FWK::Graphics::RootSignature::D3D12Filter::Linear , 2);
+		CreateStaticSampler(l_staticSamplerDescs[3] , FWK::Graphics::RootSignature::TextureAddressMode::Clamp , FWK::Graphics::RootSignature::D3D12Filter::Linear , 3);
 	}
 
 	l_rootSignatureDesc.pStaticSamplers   = l_isSampler ? l_staticSamplerDescs.data() : nullptr;
@@ -87,10 +84,10 @@ void FWK::Graphics::RootSignature::Create(FWK::Graphics::GraphicsDevice* a_graph
 	l_rootSignatureDesc.NumParameters     = (int)a_rangeTypeList.size();
 
 	ID3DBlob* l_errorBlob = nullptr;
-	auto      l_hr = D3D12SerializeRootSignature(&l_rootSignatureDesc           , 
-												 D3D_ROOT_SIGNATURE_VERSION_1_0 ,
-												 &m_rootBlob				    , 
-												 &l_errorBlob);
+	auto      l_hr		  = D3D12SerializeRootSignature(&l_rootSignatureDesc           , 
+														D3D_ROOT_SIGNATURE_VERSION_1_0 ,
+														&m_rootBlob				    , 
+														&l_errorBlob);
 
 	if (FAILED(l_hr))
 	{
@@ -113,7 +110,7 @@ void FWK::Graphics::RootSignature::Create(FWK::Graphics::GraphicsDevice* a_graph
 	}
 }
 
-void FWK::Graphics::RootSignature::CreateRange(D3D12_DESCRIPTOR_RANGE& a_range , const FWK::CommonEnum::RangeType a_type , const int a_count)
+void FWK::Graphics::RootSignature::CreateRange(D3D12_DESCRIPTOR_RANGE& a_range , const FWK::CommonEnum::RangeType a_type , const int a_count) const
 {
 	switch(a_type)
 	{

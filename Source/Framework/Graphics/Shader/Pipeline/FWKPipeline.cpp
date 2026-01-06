@@ -3,9 +3,9 @@
 void FWK::Graphics::Pipeline::SetRenderSettings(FWK::Graphics::GraphicsDevice*                   a_graphicsDevice  , 
 											    FWK::Graphics::RootSignature*                    a_rootSignature   , 
 											    const std::vector<FWK::CommonEnum::InputLayout>& a_inputLayoutList , 
-												FWK::CommonEnum::CullMode						 a_cullMode        , 
-												FWK::CommonEnum::BlendMode						 a_blendMode	   , 
-												FWK::CommonEnum::PrimitiveTopologyType			 a_topologyType)
+												const FWK::CommonEnum::CullMode					 a_cullMode        , 
+												const FWK::CommonEnum::BlendMode					 a_blendMode	   , 
+												const FWK::CommonEnum::PrimitiveTopologyType		 a_topologyType)
 {
 	if (!a_graphicsDevice) { return; }
 
