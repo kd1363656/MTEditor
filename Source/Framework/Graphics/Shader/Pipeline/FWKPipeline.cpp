@@ -1,11 +1,11 @@
 #include "FWKPipeline.h"
 
-void FWK::Graphics::Pipeline::SetREnderSettings(FWK::Graphics::GraphicsDevice*  a_graphicsDevice  , 
-											    FWK::Graphics::RootSignature*   a_rootSignature   , 
-											    const std::vector<InputLayout>& a_inputLayoutList , 
-												CullMode						a_cullMode        , 
-												BlendMode						a_blendMode		  , 
-												PrimitiveTopologyType			a_topologyType)
+void FWK::Graphics::Pipeline::SetRenderSettings(FWK::Graphics::GraphicsDevice*                   a_graphicsDevice  , 
+											    FWK::Graphics::RootSignature*                    a_rootSignature   , 
+											    const std::vector<FWK::CommonEnum::InputLayout>& a_inputLayoutList , 
+												FWK::CommonEnum::CullMode						 a_cullMode        , 
+												FWK::CommonEnum::BlendMode						 a_blendMode	   , 
+												FWK::CommonEnum::PrimitiveTopologyType			 a_topologyType)
 {
 	if (!a_graphicsDevice) { return; }
 
@@ -137,11 +137,11 @@ void FWK::Graphics::Pipeline::Create(std::vector<ID3DBlob*>			a_blobList    ,
 	}
 }
 
-void FWK::Graphics::Pipeline::SetInputLayout(std::vector<D3D12_INPUT_ELEMENT_DESC>& a_inputElementList , const std::vector<InputLayout>& a_inputLayoutList)
+void FWK::Graphics::Pipeline::SetInputLayout(std::vector<D3D12_INPUT_ELEMENT_DESC>& a_inputElementList , const std::vector<FWK::CommonEnum::InputLayout>& a_inputLayoutList)
 {
 	for (int l_i = 0; l_i < (int)a_inputLayoutList.size(); ++l_i)
 	{
-		if (a_inputLayoutList[l_i] == InputLayout::POSITION)
+		if (a_inputLayoutList[l_i] == FWK::CommonEnum::InputLayout::POSITION)
 		{
 			a_inputElementList.emplace_back( D3D12_INPUT_ELEMENT_DESC 
 			{ 
@@ -154,7 +154,7 @@ void FWK::Graphics::Pipeline::SetInputLayout(std::vector<D3D12_INPUT_ELEMENT_DES
 			   0 
 			});
 		}
-		else if (a_inputLayoutList[l_i] == InputLayout::TEXCOORD)
+		else if (a_inputLayoutList[l_i] == FWK::CommonEnum::InputLayout::TEXCOORD)
 		{
 			a_inputElementList.emplace_back( D3D12_INPUT_ELEMENT_DESC 
 			{ 
@@ -167,7 +167,7 @@ void FWK::Graphics::Pipeline::SetInputLayout(std::vector<D3D12_INPUT_ELEMENT_DES
 			   0 
 			});
 		}
-		else if (a_inputLayoutList[l_i] == InputLayout::NORMAL)
+		else if (a_inputLayoutList[l_i] == FWK::CommonEnum::InputLayout::NORMAL)
 		{
 			a_inputElementList.emplace_back( D3D12_INPUT_ELEMENT_DESC 
 			{ 
@@ -180,7 +180,7 @@ void FWK::Graphics::Pipeline::SetInputLayout(std::vector<D3D12_INPUT_ELEMENT_DES
 			   0 
 			});
 		}
-		else if (a_inputLayoutList[l_i] == InputLayout::COLOR)
+		else if (a_inputLayoutList[l_i] == FWK::CommonEnum::InputLayout::COLOR)
 		{
 			a_inputElementList.emplace_back(D3D12_INPUT_ELEMENT_DESC
 			{
@@ -193,7 +193,7 @@ void FWK::Graphics::Pipeline::SetInputLayout(std::vector<D3D12_INPUT_ELEMENT_DES
 			   0
 			});
 		}
-		else if (a_inputLayoutList[l_i] == InputLayout::TANGENT)
+		else if (a_inputLayoutList[l_i] == FWK::CommonEnum::InputLayout::TANGENT)
 		{
 			a_inputElementList.emplace_back(D3D12_INPUT_ELEMENT_DESC
 				{
@@ -206,7 +206,7 @@ void FWK::Graphics::Pipeline::SetInputLayout(std::vector<D3D12_INPUT_ELEMENT_DES
 				   0
 				});
 		}
-		else if (a_inputLayoutList[l_i] == InputLayout::SKININDEX)
+		else if (a_inputLayoutList[l_i] == FWK::CommonEnum::InputLayout::SKININDEX)
 		{
 			a_inputElementList.emplace_back(D3D12_INPUT_ELEMENT_DESC
 			{
@@ -219,7 +219,7 @@ void FWK::Graphics::Pipeline::SetInputLayout(std::vector<D3D12_INPUT_ELEMENT_DES
 			   0
 			});
 		}
-		else if (a_inputLayoutList[l_i] == InputLayout::SKINWEIGHT)
+		else if (a_inputLayoutList[l_i] == FWK::CommonEnum::InputLayout::SKINWEIGHT)
 		{
 			a_inputElementList.emplace_back(D3D12_INPUT_ELEMENT_DESC
 			{
@@ -235,7 +235,7 @@ void FWK::Graphics::Pipeline::SetInputLayout(std::vector<D3D12_INPUT_ELEMENT_DES
 	}
 }
 
-void FWK::Graphics::Pipeline::SetBlendMode(D3D12_RENDER_TARGET_BLEND_DESC& a_blendDesc , BlendMode a_blendMode)
+void FWK::Graphics::Pipeline::SetBlendMode(D3D12_RENDER_TARGET_BLEND_DESC& a_blendDesc , FWK::CommonEnum::BlendMode a_blendMode)
 {
 	a_blendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	a_blendDesc.BlendEnable			  = true;
@@ -243,7 +243,7 @@ void FWK::Graphics::Pipeline::SetBlendMode(D3D12_RENDER_TARGET_BLEND_DESC& a_ble
 	switch (a_blendMode)
 	{
 		// ‰ÁŽZ‡¬
-		case BlendMode::Add:
+		case FWK::CommonEnum::BlendMode::Add:
 			a_blendDesc.BlendOp   = D3D12_BLEND_OP_ADD;
 			a_blendDesc.SrcBlend  = D3D12_BLEND_SRC_ALPHA;
 			a_blendDesc.DestBlend = D3D12_BLEND_ONE;
@@ -255,7 +255,7 @@ void FWK::Graphics::Pipeline::SetBlendMode(D3D12_RENDER_TARGET_BLEND_DESC& a_ble
 		break;
 
 		// ”¼“§–¾
-		case BlendMode::Alpha:
+		case FWK::CommonEnum::BlendMode::Alpha:
 			a_blendDesc.BlendOp   = D3D12_BLEND_OP_ADD;
 			a_blendDesc.SrcBlend  = D3D12_BLEND_SRC_ALPHA;
 			a_blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
@@ -266,7 +266,7 @@ void FWK::Graphics::Pipeline::SetBlendMode(D3D12_RENDER_TARGET_BLEND_DESC& a_ble
 			a_blendDesc.LogicOp        = D3D12_LOGIC_OP_NOOP;
 		break;
 
-		defaul:
+		default:
 		break;
 	}
 }

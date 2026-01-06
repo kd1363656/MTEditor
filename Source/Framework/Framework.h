@@ -1,6 +1,7 @@
 #pragma once
 
 // ’è”‚È‚Ç‚Ì’è‹`
+#include "Definition/Enum/FWKCommonEnum.h"
 #include "Definition/Constant/FWKCommonConstant.h"
 #include "Definition/Struct/FWKCommonStruct.h"
 
@@ -28,3 +29,4 @@
 // "RootSignature"
 #include "Graphics/Shader/RootSignature/FWKRootSignature.h"
 #include "Graphics/Shader/Pipeline/FWKPipeline.h"
+#include "Graphics/Shader/FWKShader.h"

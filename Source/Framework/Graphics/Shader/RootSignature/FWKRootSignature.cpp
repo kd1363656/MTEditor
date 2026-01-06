@@ -1,6 +1,6 @@
 #include "FWKRootSignature.h"
 
-void FWK::Graphics::RootSignature::Create(GraphicsDevice* a_graphicsDevice, const std::vector<RangeType>& a_rangeTypeList)
+void FWK::Graphics::RootSignature::Create(GraphicsDevice* a_graphicsDevice, const std::vector<FWK::CommonEnum::RangeType>& a_rangeTypeList)
 {
 	m_device = a_graphicsDevice;
 
@@ -21,7 +21,7 @@ void FWK::Graphics::RootSignature::Create(GraphicsDevice* a_graphicsDevice, cons
 
 	for (int l_i = 0; l_i < (int)a_rangeTypeList.size(); ++l_i)
 	{
-		if (a_rangeTypeList[l_i] != FWK::Graphics::RootSignature::RangeType::SRV) { continue; }
+		if (a_rangeTypeList[l_i] != FWK::CommonEnum::RangeType::SRV) { continue; }
 		++l_samplerCount;
 	}
 
@@ -35,8 +35,8 @@ void FWK::Graphics::RootSignature::Create(GraphicsDevice* a_graphicsDevice, cons
 	{
 		switch(a_rangeTypeList[l_i])
 		{
-			case FWK::Graphics::RootSignature::RangeType::CBV:
-				CreateRange(l_ranges[l_i] , FWK::Graphics::RootSignature::RangeType::CBV , l_cbvCount);
+			case FWK::CommonEnum::RangeType::CBV:
+				CreateRange(l_ranges[l_i] , FWK::CommonEnum::RangeType::CBV , l_cbvCount);
 				l_rootParams[l_i].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 				l_rootParams[l_i].DescriptorTable.pDescriptorRanges   = &l_ranges[l_i];
 				l_rootParams[l_i].DescriptorTable.NumDescriptorRanges = 1;
@@ -44,8 +44,8 @@ void FWK::Graphics::RootSignature::Create(GraphicsDevice* a_graphicsDevice, cons
 				++l_cbvCount;
 			break;
 
-			case FWK::Graphics::RootSignature::RangeType::SRV:
-				CreateRange(l_ranges[l_i] , FWK::Graphics::RootSignature::RangeType::SRV , l_samplerCount);
+			case FWK::CommonEnum::RangeType::SRV:
+				CreateRange(l_ranges[l_i] , FWK::CommonEnum::RangeType::SRV , l_samplerCount);
 				l_rootParams[l_i].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 				l_rootParams[l_i].DescriptorTable.pDescriptorRanges   = &l_ranges[l_i];
 				l_rootParams[l_i].DescriptorTable.NumDescriptorRanges = 1;
@@ -56,8 +56,8 @@ void FWK::Graphics::RootSignature::Create(GraphicsDevice* a_graphicsDevice, cons
 
 			break;
 
-			case FWK::Graphics::RootSignature::RangeType::UAV:
-				CreateRange(l_ranges[l_i] , FWK::Graphics::RootSignature::RangeType::UAV , l_uavCount);
+			case FWK::CommonEnum::RangeType::UAV:
+				CreateRange(l_ranges[l_i] , FWK::CommonEnum::RangeType::UAV , l_uavCount);
 				l_rootParams[l_i].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 				l_rootParams[l_i].DescriptorTable.pDescriptorRanges   = &l_ranges[l_i];
 				l_rootParams[l_i].DescriptorTable.NumDescriptorRanges = 1;
@@ -106,11 +106,11 @@ void FWK::Graphics::RootSignature::Create(GraphicsDevice* a_graphicsDevice, cons
 	}
 }
 
-void FWK::Graphics::RootSignature::CreateRange(D3D12_DESCRIPTOR_RANGE& a_range, FWK::Graphics::RootSignature::RangeType a_type, const int a_count)
+void FWK::Graphics::RootSignature::CreateRange(D3D12_DESCRIPTOR_RANGE& a_range, FWK::CommonEnum::RangeType a_type, const int a_count)
 {
 	switch(a_type)
 	{
-		case FWK::Graphics::RootSignature::RangeType::CBV:
+		case FWK::CommonEnum::RangeType::CBV:
 			a_range				                      = {};
 			a_range.NumDescriptors                    = 1;
 			a_range.RangeType	                      = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
@@ -118,7 +118,7 @@ void FWK::Graphics::RootSignature::CreateRange(D3D12_DESCRIPTOR_RANGE& a_range, 
 			a_range.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 		break;
 
-		case FWK::Graphics::RootSignature::RangeType::SRV:
+		case FWK::CommonEnum::RangeType::SRV:
 			a_range				                      = {};
 			a_range.NumDescriptors                    = 1;
 			a_range.RangeType	                      = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
@@ -126,7 +126,7 @@ void FWK::Graphics::RootSignature::CreateRange(D3D12_DESCRIPTOR_RANGE& a_range, 
 			a_range.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 		break;
 
-		case FWK::Graphics::RootSignature::RangeType::UAV:
+		case FWK::CommonEnum::RangeType::UAV:
 			a_range				                      = {};
 			a_range.NumDescriptors                    = 1;
 			a_range.RangeType	                      = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;

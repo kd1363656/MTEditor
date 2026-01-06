@@ -6,13 +6,6 @@ namespace FWK::Graphics
 	{
 	public:
 
-		enum class RangeType
-		{
-			CBV ,
-			SRV ,
-			UAV ,
-		};
-
 		enum class TextureAddressMode
 		{
 			Wrap  ,
@@ -30,7 +23,7 @@ namespace FWK::Graphics
 		RootSignature () = default;
 		~RootSignature() = default;
 
-		void Create(GraphicsDevice* a_graphicsDevice , const std::vector<FWK::Graphics::RootSignature::RangeType>& a_rangeTypeList);
+		void Create(GraphicsDevice* a_graphicsDevice , const std::vector<FWK::CommonEnum::RangeType>& a_rangeTypeList);
 
 		// ルートシグネチャの取得
 		ID3D12RootSignature* GetRootSignature() { return m_rootSignature.Get(); }
@@ -38,7 +31,7 @@ namespace FWK::Graphics
 	private:
 
 		// レンジの作成
-		void CreateRange(D3D12_DESCRIPTOR_RANGE& a_range , FWK::Graphics::RootSignature::RangeType a_type , const int a_count);
+		void CreateRange(D3D12_DESCRIPTOR_RANGE& a_range , FWK::CommonEnum::RangeType a_type , const int a_count);
 
 		void CreateStaticSampler(D3D12_STATIC_SAMPLER_DESC& a_samplerDesc , 
 								 TextureAddressMode         a_mode        , 

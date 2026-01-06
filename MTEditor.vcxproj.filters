@@ -70,6 +70,9 @@
     <Filter Include="Source\Framework\Window">
       <UniqueIdentifier>{b84d9da9-3578-4acc-91a3-d9e3f62c151f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Framework\Definition\Enum">
+      <UniqueIdentifier>{bd4383ce-a8d9-4560-847d-843c02c176da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\PCH.h">
@@ -128,6 +131,9 @@
     </ClInclude>
     <ClInclude Include="Source\Framework\Window\FWKWindow.h">
       <Filter>Source\Framework\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Definition\Enum\FWKCommonEnum.h">
+      <Filter>Source\Framework\Definition\Enum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
