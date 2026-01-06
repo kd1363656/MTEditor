@@ -2,7 +2,7 @@
 
 namespace FWK::Graphics
 {
-	class Shader
+	class Shader final
 	{
 	public:
 

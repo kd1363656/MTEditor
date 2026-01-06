@@ -2,7 +2,7 @@
 
 namespace FWK::Graphics
 {
-	class Pipeline
+	class Pipeline final
 	{
 	public:
 
@@ -41,9 +41,9 @@ namespace FWK::Graphics
 		FWK::Graphics::RootSignature*  m_rootSignature = nullptr;
 
 		std::vector<FWK::CommonEnum::InputLayout> m_inputLayoutList;
-		FWK::CommonEnum::CullMode                 m_cullMode;
-		FWK::CommonEnum::BlendMode				  m_blendMode;
-		FWK::CommonEnum::PrimitiveTopologyType    m_topologyType;
+		FWK::CommonEnum::CullMode                 m_cullMode      = FWK::CommonEnum::CullMode::None;
+		FWK::CommonEnum::BlendMode				  m_blendMode     = FWK::CommonEnum::BlendMode::Add;
+		FWK::CommonEnum::PrimitiveTopologyType    m_topologyType  = FWK::CommonEnum::PrimitiveTopologyType::Undefined;
 
 		ComPtr<ID3D12PipelineState> m_pipelineState = nullptr;
 	};

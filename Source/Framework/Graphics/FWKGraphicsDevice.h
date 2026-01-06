@@ -8,6 +8,9 @@ namespace FWK::Graphics
 
 		bool Init(const HWND a_hWND , const FWK::CommonStruct::Dimension2D& a_size);
 
+		// 描画準備
+		void Prepare();
+
 		// 画面(スワップチェイン)の切り替え
 		void ScreenFlip();
 

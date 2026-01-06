@@ -2,6 +2,8 @@
 
 void FWK::Graphics::Mesh::Create(FWK::Graphics::GraphicsDevice* a_graphicsDevice)
 {
+	if (!a_graphicsDevice) { return; }
+
 	m_device = a_graphicsDevice;
 
 	// ’¸“_‚ÌÀ•W
@@ -25,15 +27,15 @@ void FWK::Graphics::Mesh::Create(FWK::Graphics::GraphicsDevice* a_graphicsDevice
 	l_resDesc.Flags               = D3D12_RESOURCE_FLAG_NONE;
 	l_resDesc.Layout              = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	auto* l_hr = m_device->GetDevice();
-	if (!l_hr) { return; }
+	auto l_device = m_device->GetDevice();
+	if (!l_device) { return; }
 
-	l_hr->CreateCommittedResource(&l_heapProp                       , 
-								  D3D12_HEAP_FLAG_NONE              , 
-								  &l_resDesc		                , 
-								  D3D12_RESOURCE_STATE_GENERIC_READ , 
-								  nullptr                           ,
-								  IID_PPV_ARGS(&m_vBuffer));
+	auto l_hr = l_device->CreateCommittedResource(&l_heapProp                       , 
+												  D3D12_HEAP_FLAG_NONE              , 
+												  &l_resDesc                        , 
+												  D3D12_RESOURCE_STATE_GENERIC_READ , 
+												  nullptr                           ,
+												  IID_PPV_ARGS(&m_vBuffer));
 
 	if (FAILED(l_hr))
 	{

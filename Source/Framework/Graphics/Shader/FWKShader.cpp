@@ -5,6 +5,8 @@ void FWK::Graphics::Shader::Create(FWK::Graphics::GraphicsDevice*               
 								   const RenderingSetting&		                 a_renderingSetting , 
 								   const std::vector<FWK::CommonEnum::RangeType> a_rangeTypeList)
 {
+	if (!m_device) { return; }
+
 	m_device = a_graphicsDevice;
 
 	LoadShaderFile(a_filePath);
@@ -28,25 +30,32 @@ void FWK::Graphics::Shader::Create(FWK::Graphics::GraphicsDevice*               
 									a_renderingSetting.blendMode	        , 
 									a_renderingSetting.primitiveTopologyType);
 
-	m_upPipeline->Create({ m_vsBlob , m_hsBlob , m_gsBlob , } , 
-						  a_renderingSetting.formatList       , 
-						  a_renderingSetting.isDepth          , 
-						  a_renderingSetting.isDepthMask      , 
-						  a_renderingSetting.rtvCount		  , 
+	m_upPipeline->Create({ m_vsBlob , m_hsBlob , m_dsBlob , m_gsBlob , m_psBlob } , 
+						  a_renderingSetting.formatList                           , 
+						  a_renderingSetting.isDepth                              , 
+						  a_renderingSetting.isDepthMask                          , 
+						  a_renderingSetting.rtvCount		                      , 
 						  a_renderingSetting.isWireFrame);
 }
 
 void FWK::Graphics::Shader::Begin(const int a_w, const int a_h)
 {
-	if (!m_device) { return; }
+	if (!m_device)     { return; }
+	if (!m_upPipeline) { return; }
 
 	auto* l_cmdList = m_device->GetCmdList();
 	if (!l_cmdList) { return; }
 
-	l_cmdList->SetPipelineState(m_upPipeline->GetPipeline());
+	auto l_pipeline = m_upPipeline->GetPipeline();
+	if (!l_pipeline) { return; }
+
+	auto l_rootSignature = m_upRootSignature->GetRootSignature();
+	if (!l_rootSignature) { return; }
+
+	l_cmdList->SetPipelineState(l_pipeline);
 
 	// ルートシグネチャのセット
-	l_cmdList->SetGraphicsRootSignature(m_upRootSignature->GetRootSignature());
+	l_cmdList->SetGraphicsRootSignature(l_rootSignature);
 
 	D3D12_PRIMITIVE_TOPOLOGY_TYPE l_topologyType = static_cast<D3D12_PRIMITIVE_TOPOLOGY_TYPE>(m_upPipeline->GetTopologyType());
 
@@ -101,16 +110,16 @@ void FWK::Graphics::Shader::LoadShaderFile(const std::wstring& a_filePath)
 
 	// 頂点シェーダーのコンパイル
 	{
-		std::wstring l_fullFilePath = l_currentPath + a_filePath + L"_VS" + l_format;
+		std::wstring l_fullFilePath = l_currentPath + L"VS_" + a_filePath + l_format;
 
-		auto l_hr = D3DCompileFromFile(l_currentPath.c_str() , 
-									   nullptr               , 
-									   l_include             , 
-									   "main"                , 
-									   "vs_5_0"              , 
-									    l_flag               ,
-										0                    , 
-										&m_vsBlob            , 
+		auto l_hr = D3DCompileFromFile(l_fullFilePath.c_str() , 
+									   nullptr                , 
+									   l_include              , 
+									   "main"                 , 
+									   "vs_5_0"               , 
+									    l_flag                ,
+										0                     , 
+										&m_vsBlob             , 
 										&l_errorBlob);
 
 		if (FAILED(l_hr))
@@ -122,7 +131,7 @@ void FWK::Graphics::Shader::LoadShaderFile(const std::wstring& a_filePath)
 
 	// ハルシェーダーのコンパイル
 	{
-		std::wstring l_fullFilePath = l_currentPath + a_filePath + L"_HS" + l_format;
+		std::wstring l_fullFilePath = l_currentPath + L"HS_" + a_filePath + l_format;
 		auto l_hr = D3DCompileFromFile(l_fullFilePath.c_str() , 
 									   nullptr                , 
 									   l_include              , 
@@ -137,7 +146,7 @@ void FWK::Graphics::Shader::LoadShaderFile(const std::wstring& a_filePath)
 
 	// ドメインシェーダーのコンパイル
 	{
-		std::wstring l_fullFilePath = l_currentPath + a_filePath + L"_DS" + l_format;
+		std::wstring l_fullFilePath = l_currentPath + L"DS_" + a_filePath + l_format;
 		auto l_hr = D3DCompileFromFile(l_fullFilePath.c_str() , 
 									   nullptr                , 
 									   l_include              , 
@@ -153,7 +162,7 @@ void FWK::Graphics::Shader::LoadShaderFile(const std::wstring& a_filePath)
 
 	// ジオメトリシェーダーのコンパイル
 	{
-		std::wstring l_fullFilePath = l_currentPath + a_filePath + L"_GS" + l_format;
+		std::wstring l_fullFilePath = l_currentPath + L"GS_" + a_filePath + l_format;
 		auto l_hr = D3DCompileFromFile(l_fullFilePath.c_str() , 
 									   nullptr                , 
 									   l_include              , 
@@ -169,7 +178,7 @@ void FWK::Graphics::Shader::LoadShaderFile(const std::wstring& a_filePath)
 
 	// ピクセルシェーダーのコンパイル
 	{
-		std::wstring l_fullFilePath = l_currentPath + a_filePath + L"_PS" + l_format;
+		std::wstring l_fullFilePath = l_currentPath + L"PS_" + a_filePath + l_format;
 		auto l_hr = D3DCompileFromFile(l_fullFilePath.c_str() , 
 									   nullptr                , 
 									   l_include              , 

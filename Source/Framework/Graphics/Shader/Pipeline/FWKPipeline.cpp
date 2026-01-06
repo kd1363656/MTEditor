@@ -24,8 +24,9 @@ void FWK::Graphics::Pipeline::Create(std::vector<ID3DBlob*>			a_blobList    ,
 									 const int						a_rtvCount    , 
 									 const bool						a_isWireFrame)
 {
-	if (!m_rootSignature) { return; }
-	if (!m_device)		  { return; }
+	if (!m_rootSignature)      { return; }
+	if (!m_device)		       { return; }
+	if (a_blobList.size() < 5) { return; }
 
 	std::vector<D3D12_INPUT_ELEMENT_DESC> l_inputLayoutList;
 
@@ -35,34 +36,38 @@ void FWK::Graphics::Pipeline::Create(std::vector<ID3DBlob*>			a_blobList    ,
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC l_graphicsPipelineState = {};
 
 	// 頂点シェーダーをセット
-	if (!a_blobList[0]) { return; }
-	l_graphicsPipelineState.VS.pShaderBytecode = a_blobList[0]->GetBufferPointer();
-	l_graphicsPipelineState.VS.BytecodeLength  = a_blobList[0]->GetBufferSize   ();
-	
+	if (a_blobList[0]) 
+	{
+		l_graphicsPipelineState.VS.pShaderBytecode = a_blobList[0]->GetBufferPointer();
+		l_graphicsPipelineState.VS.BytecodeLength  = a_blobList[0]->GetBufferSize   ();
+	}
 
 	// ハルシェーダーをセット
-	if (!a_blobList[1]) { return; }
-	l_graphicsPipelineState.HS.pShaderBytecode = a_blobList[1]->GetBufferPointer();
-	l_graphicsPipelineState.HS.BytecodeLength  = a_blobList[1]->GetBufferSize   ();
-	
+	if (a_blobList[1])
+	{
+		l_graphicsPipelineState.HS.pShaderBytecode = a_blobList[1]->GetBufferPointer();
+		l_graphicsPipelineState.HS.BytecodeLength  = a_blobList[1]->GetBufferSize   ();
+	}
 
 	// ドメインシェーダーをセット
-	if (!a_blobList[2]) { return; }
-	l_graphicsPipelineState.DS.pShaderBytecode = a_blobList[2]->GetBufferPointer();
-	l_graphicsPipelineState.DS.BytecodeLength  = a_blobList[2]->GetBufferSize   ();
-	
+	if (a_blobList[2])
+	{
+		l_graphicsPipelineState.DS.pShaderBytecode = a_blobList[2]->GetBufferPointer();
+		l_graphicsPipelineState.DS.BytecodeLength  = a_blobList[2]->GetBufferSize   ();
+	}	
 
 	// ジオメトリシェーダーをセット
-	if (!a_blobList[3]) { return; }
-	l_graphicsPipelineState.GS.pShaderBytecode = a_blobList[3]->GetBufferPointer();
-	l_graphicsPipelineState.GS.BytecodeLength  = a_blobList[3]->GetBufferSize   ();
-	
-
+	if (a_blobList[3])
+	{
+		l_graphicsPipelineState.GS.pShaderBytecode = a_blobList[3]->GetBufferPointer();
+		l_graphicsPipelineState.GS.BytecodeLength  = a_blobList[3]->GetBufferSize   ();
+	}
 	// ピクセルシェーダーをセット
-	if (!a_blobList[4]) { return; }
-	l_graphicsPipelineState.PS.pShaderBytecode = a_blobList[4]->GetBufferPointer();
-	l_graphicsPipelineState.PS.BytecodeLength  = a_blobList[4]->GetBufferSize   ();
-	
+	if (a_blobList[4])
+	{
+		l_graphicsPipelineState.PS.pShaderBytecode = a_blobList[4]->GetBufferPointer();
+		l_graphicsPipelineState.PS.BytecodeLength  = a_blobList[4]->GetBufferSize   ();
+	}
 
 	l_graphicsPipelineState.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
@@ -113,8 +118,9 @@ void FWK::Graphics::Pipeline::Create(std::vector<ID3DBlob*>			a_blobList    ,
 	SetBlendMode(l_blendDesc , m_blendMode);
 
 	l_graphicsPipelineState.BlendState.RenderTarget[0]     = l_blendDesc;
-	l_graphicsPipelineState.InputLayout.pInputElementDescs = l_inputLayoutList.data();
-	l_graphicsPipelineState.PrimitiveTopologyType		   = (a_blobList[3] && a_blobList[4] ? D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH : static_cast<D3D12_PRIMITIVE_TOPOLOGY_TYPE>(m_topologyType));
+	l_graphicsPipelineState.InputLayout.pInputElementDescs = l_inputLayoutList.data      ();
+	l_graphicsPipelineState.InputLayout.NumElements        = (int)(m_inputLayoutList.size());
+	l_graphicsPipelineState.PrimitiveTopologyType		   = (a_blobList[3] && a_blobList[4]) ? D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH : static_cast<D3D12_PRIMITIVE_TOPOLOGY_TYPE>(m_topologyType);
 	
 	// "RTV"をセット
 	l_graphicsPipelineState.NumRenderTargets = a_rtvCount;
@@ -128,7 +134,10 @@ void FWK::Graphics::Pipeline::Create(std::vector<ID3DBlob*>			a_blobList    ,
 	l_graphicsPipelineState.SampleDesc.Count = 1;									// サンプリングは"1"ピクセル付き
 	l_graphicsPipelineState.pRootSignature   = m_rootSignature->GetRootSignature();
 
-	auto l_hr = m_device->GetDevice()->CreateGraphicsPipelineState(&l_graphicsPipelineState , IID_PPV_ARGS(&m_pipelineState));
+	auto l_device = m_device->GetDevice();
+	if (!l_device) { return; }
+
+	auto l_hr = l_device->CreateGraphicsPipelineState(&l_graphicsPipelineState , IID_PPV_ARGS(&m_pipelineState));
 
 	if (FAILED(l_hr))
 	{
@@ -223,7 +232,7 @@ void FWK::Graphics::Pipeline::SetInputLayout(std::vector<D3D12_INPUT_ELEMENT_DES
 		{
 			a_inputElementList.emplace_back(D3D12_INPUT_ELEMENT_DESC
 			{
-			   "TEXCOORD"                                 ,
+			   "SKINWEIGHT"                                 ,
 			   0                                          ,
 			   DXGI_FORMAT_R32G32B32A32_FLOAT             ,
 			   0						                  ,

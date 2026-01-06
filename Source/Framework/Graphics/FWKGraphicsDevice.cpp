@@ -58,6 +58,18 @@ bool FWK::Graphics::GraphicsDevice::Init(const HWND a_hWND, const FWK::CommonStr
 	return true;
 }
 
+void FWK::Graphics::GraphicsDevice::Prepare()
+{
+	auto l_bbIDX = m_swapChain->GetCurrentBackBufferIndex();
+	SetResourceBarrier(m_swapChainBuffers[l_bbIDX].Get() , D3D12_RESOURCE_STATE_PRESENT , D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	auto l_rtvH = m_rtvHeap->GetRTVCPUHandle(l_bbIDX);
+	m_cmdList->OMSetRenderTargets(1 , &l_rtvH , false  , nullptr);
+
+	float l_clearColor[] = { 1.0f , 0.0f , 1.0f , 1.0f };				   // 黄色
+	m_cmdList->ClearRenderTargetView(l_rtvH , l_clearColor , 0 , nullptr);
+}
+
 void FWK::Graphics::GraphicsDevice::ScreenFlip()
 {
 	if (!m_swapChain)
@@ -92,20 +104,6 @@ void FWK::Graphics::GraphicsDevice::ScreenFlip()
 
 	// リソースバリアのステートをレンダーターゲットに変更
 	auto l_bbIDX = m_swapChain->GetCurrentBackBufferIndex();
-	SetResourceBarrier(m_swapChainBuffers[l_bbIDX].Get() , D3D12_RESOURCE_STATE_PRESENT , D3D12_RESOURCE_STATE_RENDER_TARGET);
-
-	// レンダーターゲットをセット
-	auto l_rtvH = m_rtvHeap->GetRTVCPUHandle(l_bbIDX);
-	m_cmdList->OMSetRenderTargets(1       , 
-								  &l_rtvH , 
-								  false   , 
-								  nullptr);
-
-	// セットしたレンダーターゲットの画面をクリア
-	float l_clearColor[] = { 1.0f , 0.0f , 1.0f , 1.0f };					// 紫色
-	m_cmdList->ClearRenderTargetView(l_rtvH , l_clearColor , 0 , nullptr);
-
-	// リソースバリアのステートをプレゼントに戻す
 	SetResourceBarrier(m_swapChainBuffers[l_bbIDX].Get() , D3D12_RESOURCE_STATE_RENDER_TARGET , D3D12_RESOURCE_STATE_PRESENT);
 
 	// コマンドリストを閉じて実行

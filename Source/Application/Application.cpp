@@ -41,6 +41,18 @@ void Application::Execute()
 		return;
 	}
 
+	FWK::Graphics::Mesh l_mesh = {};
+	l_mesh.Create(&FWK::Graphics::GraphicsDevice::GetInstance());
+
+	FWK::Graphics::Shader::RenderingSetting l_renderingSetting = {};
+	l_renderingSetting.inputLayoutList = { FWK::CommonEnum::InputLayout::POSITION };
+	l_renderingSetting.formatList      = { DXGI_FORMAT_R8G8B8A8_UNORM };
+	l_renderingSetting.isDepth         = false;
+	l_renderingSetting.isDepthMask     = false;
+
+	FWK::Graphics::Shader l_shader = {};
+	l_shader.Create(&FWK::Graphics::GraphicsDevice::GetInstance(), L"SimpleShader", l_renderingSetting, {});
+
 	// ゲームループ
 	while(true)
 	{
@@ -60,6 +72,11 @@ void Application::Execute()
 		if (m_isEndGameLoop) { break; }
 
 		// バックバッファの描画
+		FWK::Graphics::GraphicsDevice::GetInstance().Prepare();
+
+		l_shader.Begin   (m_windowSize.width , m_windowSize.height);
+		l_shader.DrawMesh(l_mesh);
+
 		FWK::Graphics::GraphicsDevice::GetInstance().ScreenFlip();
 
 		// フレームレート制御
