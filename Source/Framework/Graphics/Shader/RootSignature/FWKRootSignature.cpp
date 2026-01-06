@@ -86,7 +86,7 @@ void FWK::Graphics::RootSignature::Create(FWK::Graphics::GraphicsDevice* a_graph
 	ID3DBlob* l_errorBlob = nullptr;
 	auto      l_hr		  = D3D12SerializeRootSignature(&l_rootSignatureDesc           , 
 														D3D_ROOT_SIGNATURE_VERSION_1_0 ,
-														&m_rootBlob				    , 
+														&m_rootBlob					   , 
 														&l_errorBlob);
 
 	if (FAILED(l_hr))

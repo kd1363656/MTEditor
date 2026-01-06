@@ -30,7 +30,7 @@ namespace FWK::Graphics
 		void Begin(const int a_w , const int a_h);
 		
 		// ƒƒbƒVƒ…‚Ì•`‰æ
-		void DrawMesh(const FWK::Graphics::Mesh& a_mesh);
+		void DrawMesh(const FWK::Graphics::Mesh& a_mesh) const;
 
 	private:
 

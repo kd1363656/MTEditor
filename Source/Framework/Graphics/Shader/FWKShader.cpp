@@ -94,7 +94,7 @@ void FWK::Graphics::Shader::Begin(const int a_w, const int a_h)
 	FWK::Graphics::GraphicsDevice::GetInstance().GetCmdList()->RSSetScissorRects(1 , &l_rect);
 }
 
-void FWK::Graphics::Shader::DrawMesh(const FWK::Graphics::Mesh& a_mesh)
+void FWK::Graphics::Shader::DrawMesh(const FWK::Graphics::Mesh& a_mesh) const
 {
 	a_mesh.DrawInstanced();
 }
