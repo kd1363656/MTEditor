@@ -7,9 +7,9 @@ void FWK::Graphics::Mesh::Create(FWK::Graphics::GraphicsDevice* a_graphicsDevice
 	m_device = a_graphicsDevice;
 
 	// í∏ì_ÇÃç¿ïW
-	m_vertices[0] = { -1.0F , 1.0F };
-	m_vertices[1] = {  1.0F , 1.0F };
-	m_vertices[2] = {  0.0F , 1.0F };
+	m_vertices[0] = { -1.0F , -1.0F };
+	m_vertices[1] = {  1.0F ,  1.0F };
+	m_vertices[2] = {  0.0F ,  1.0F };
 	
 	D3D12_HEAP_PROPERTIES l_heapProp = {};
 	l_heapProp.Type					 = D3D12_HEAP_TYPE_UPLOAD;
