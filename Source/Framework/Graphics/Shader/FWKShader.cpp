@@ -5,7 +5,7 @@ void FWK::Graphics::Shader::Create(FWK::Graphics::GraphicsDevice*               
 								   const RenderingSetting&		                 a_renderingSetting , 
 								   const std::vector<FWK::CommonEnum::RangeType> a_rangeTypeList)
 {
-	if (!m_device) { return; }
+	if (!a_graphicsDevice) { return; }
 
 	m_device = a_graphicsDevice;
 
@@ -46,10 +46,10 @@ void FWK::Graphics::Shader::Begin(const int a_w, const int a_h)
 	auto* l_cmdList = m_device->GetCmdList();
 	if (!l_cmdList) { return; }
 
-	auto l_pipeline = m_upPipeline->GetPipeline();
+	auto* l_pipeline = m_upPipeline->GetPipeline();
 	if (!l_pipeline) { return; }
 
-	auto l_rootSignature = m_upRootSignature->GetRootSignature();
+	auto* l_rootSignature = m_upRootSignature->GetRootSignature();
 	if (!l_rootSignature) { return; }
 
 	l_cmdList->SetPipelineState(l_pipeline);
@@ -101,7 +101,7 @@ void FWK::Graphics::Shader::DrawMesh(const FWK::Graphics::Mesh& a_mesh)
 
 void FWK::Graphics::Shader::LoadShaderFile(const std::wstring& a_filePath)
 {
-	ID3DInclude* l_include   = D3D_COMPILE_STANDARD_FILE_INCLUDE;
+	auto*        l_include   = D3D_COMPILE_STANDARD_FILE_INCLUDE;
 	UINT         l_flag      = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 	ID3DBlob*    l_errorBlob = nullptr;
 

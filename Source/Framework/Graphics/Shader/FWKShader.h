@@ -6,7 +6,7 @@ namespace FWK::Graphics
 	{
 	public:
 
-		struct RenderingSetting
+		struct RenderingSetting final
 		{
 			std::vector<FWK::CommonEnum::InputLayout> inputLayoutList;
 			std::vector<DXGI_FORMAT>				  formatList;

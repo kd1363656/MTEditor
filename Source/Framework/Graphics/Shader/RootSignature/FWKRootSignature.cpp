@@ -1,6 +1,6 @@
 #include "FWKRootSignature.h"
 
-void FWK::Graphics::RootSignature::Create(GraphicsDevice* a_graphicsDevice, const std::vector<FWK::CommonEnum::RangeType>& a_rangeTypeList)
+void FWK::Graphics::RootSignature::Create(FWK::Graphics::GraphicsDevice* a_graphicsDevice, const std::vector<FWK::CommonEnum::RangeType>& a_rangeTypeList)
 {
 	m_device = a_graphicsDevice;
 
@@ -82,6 +82,7 @@ void FWK::Graphics::RootSignature::Create(GraphicsDevice* a_graphicsDevice, cons
 
 	l_rootSignatureDesc.pStaticSamplers   = l_isSampler ? l_staticSamplerDescs.data() : nullptr;
 	l_rootSignatureDesc.NumStaticSamplers = l_isSampler ? 4 : 0;
+	l_rootSignatureDesc.Flags             = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	l_rootSignatureDesc.pParameters       = l_rootParams.data();
 	l_rootSignatureDesc.NumParameters     = (int)a_rangeTypeList.size();
 
@@ -97,7 +98,13 @@ void FWK::Graphics::RootSignature::Create(GraphicsDevice* a_graphicsDevice, cons
 		return;
 	}
 
-	l_hr = m_device->GetDevice()->CreateRootSignature(0 , m_rootBlob->GetBufferPointer() , m_rootBlob->GetBufferSize() , IID_PPV_ARGS(&m_rootSignature));
+	auto* l_device = m_device->GetDevice();
+	if (!l_device) { return; }
+
+	l_hr = l_device->CreateRootSignature(0							    ,
+										 m_rootBlob->GetBufferPointer() , 
+										 m_rootBlob->GetBufferSize()    , 
+										 IID_PPV_ARGS(&m_rootSignature));
 
 	if (FAILED(l_hr))
 	{
@@ -106,7 +113,7 @@ void FWK::Graphics::RootSignature::Create(GraphicsDevice* a_graphicsDevice, cons
 	}
 }
 
-void FWK::Graphics::RootSignature::CreateRange(D3D12_DESCRIPTOR_RANGE& a_range, FWK::CommonEnum::RangeType a_type, const int a_count)
+void FWK::Graphics::RootSignature::CreateRange(D3D12_DESCRIPTOR_RANGE& a_range , const FWK::CommonEnum::RangeType a_type , const int a_count)
 {
 	switch(a_type)
 	{
@@ -139,13 +146,13 @@ void FWK::Graphics::RootSignature::CreateRange(D3D12_DESCRIPTOR_RANGE& a_range, 
 	}
 }
 
-void FWK::Graphics::RootSignature::CreateStaticSampler(D3D12_STATIC_SAMPLER_DESC& a_samplerDesc ,
-													   TextureAddressMode         a_mode        ,
-													   D3D12Filter				  a_filter      , 
-													   const int				  a_count)
+void FWK::Graphics::RootSignature::CreateStaticSampler(D3D12_STATIC_SAMPLER_DESC&						      a_samplerDesc ,
+													   const FWK::Graphics::RootSignature::TextureAddressMode a_mode        ,
+													   const FWK::Graphics::RootSignature::D3D12Filter		  a_filter      , 
+													   const int											  a_count) const
 {
-	D3D12_TEXTURE_ADDRESS_MODE l_addressMode    = a_mode == TextureAddressMode::Wrap ? D3D12_TEXTURE_ADDRESS_MODE_WRAP : D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-	D3D12_FILTER			   l_samplingFilter = a_filter == D3D12Filter::Point     ? D3D12_FILTER_MIN_MAG_MIP_POINT  : D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	D3D12_TEXTURE_ADDRESS_MODE l_addressMode    = a_mode   == FWK::Graphics::RootSignature::TextureAddressMode::Wrap ? D3D12_TEXTURE_ADDRESS_MODE_WRAP : D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	D3D12_FILTER			   l_samplingFilter = a_filter == FWK::Graphics::RootSignature::D3D12Filter::Point       ? D3D12_FILTER_MIN_MAG_MIP_POINT  : D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 
 	a_samplerDesc                  = {};
 	a_samplerDesc.AddressU         = l_addressMode;
